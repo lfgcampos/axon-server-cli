@@ -35,7 +35,7 @@ When running Axon Server with access control enabled, executing commands remotel
 This has to provided with the `-t` option. When you run a command on the Axon Server node itself, you don't have to provide 
 a token.
 
-For Axon Server Standard Edition the token is specified in the `axonserver.properties` file 
+For Axon Server Standard Edition, the token is specified in the `axonserver.properties` file 
 \(property name = `axoniq.axonserver.token`\). The token needs to be supplied using the `-t` option in any of the commands.
 
 ## Config
@@ -45,18 +45,18 @@ This specific cli accept a configuration file named `axonserver-cli.yaml` on the
 
 ## Commands
 
-This section describes all commands supported by the command line interface, grouped by the specific area.
+This section describes some commands with examples supported by the command line interface.
 Mind that the list above is marking the ones which are already done.
-All the commands have the `-h` option, which will show all the info you need to know including all the flags you can set.
+All commands have the `-h` option, which will show all the info you need to know including all the flags you can set.
 
 For example:
 
-`./axonserver-cli-cobra.exe -h`
+`axon-server-cli -h`
 ```
 This CLI is used to perform actions on AxonServer
 
 Usage:
-  axonserver-cli-cobra [command]
+  axon-server-cli [command]
 
 Available Commands:
   application commands related to applications
@@ -66,21 +66,21 @@ Available Commands:
 
 Flags:
       --config string   config file (default is axonserver-cli.yaml)
-  -h, --help            help for axonserver-cli-cobra
+  -h, --help            help for axon-server-cli
   -S, --server string   URL of AxonServer (default "http://localhost:8024")
   -t, --token string    Authentication Token
-  -v, --version         version for axonserver-cli-cobra
+  -v, --version         version for axon-server-cli
 
-Use "axonserver-cli-cobra [command] --help" for more information about a command.
+Use "axon-server-cli [command] --help" for more information about a command.
 ```
 
 or
-`./axonserver-cli-cobra.exe user -h`
+`axon-server-cli user -h`
 ```
 This is the command related to users
 
 Usage:
-  axonserver-cli-cobra user [command]
+  axon-server-cli user [command]
 
 Aliases:
   user, u
@@ -98,16 +98,16 @@ Global Flags:
   -S, --server string   URL of AxonServer (default "http://localhost:8024")
   -t, --token string    Authentication Token
 
-Use "axonserver-cli-cobra user [command] --help" for more information about a command.
+Use "axon-server-cli user [command] --help" for more information about a command.
 ```
 
 or even deeper
-`./axonserver-cli-cobra.exe user register -h`
+`axon-server-cli user register -h`
 ```
 register a user to be used on axonserver
 
 Usage:
-  axonserver-cli-cobra user register [flags]
+  axon-server-cli user register [flags]
 
 Aliases:
   register, r

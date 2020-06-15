@@ -35,7 +35,7 @@ var (
 	jsonType     = "application/json"
 
 	rootCmd = &cobra.Command{
-		Use:   "axonserver-cli-cobra",
+		Use:   "axon-server-cli",
 		Short: "AxonServer-CLI in GO",
 		Long:  `This CLI is used to perform actions on AxonServer`,
 	}
