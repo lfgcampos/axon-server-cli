@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	// "net/http"
@@ -33,7 +34,12 @@ import (
 type application struct {
 	Name string			`json:"name"`
 	Description string	`json:"description"`
-	Roles []string		`json:"roles"`
+	Roles []role		`json:"roles"`
+}
+
+type role struct {
+	Context string	`json:"context"`
+	Roles []string	`json:"roles"`
 }
 
 var applicationName, applicationDescription string
@@ -51,8 +57,8 @@ func init() {
 	applicationCmd.AddCommand(applicationRegisterCmd)
 
 	applicationRegisterCmd.Flags().StringVarP(&applicationName, "name", "a", "", "application name")
-	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "applicatoin description")
-	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "roles")
+	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "application description")
+	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "application roles. Please write them as comma separated values, and separate the context and role with an @ sign. Example: CONTEXT@ROLE1,CONTEXT@ROLE2,...")
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {
@@ -82,10 +88,11 @@ func registerApplication(cmd *cobra.Command, args []string) {
 }
 
 func buildApplicationJSON() []byte {
+
 	application := &application{
 		Name: applicationName,
 		Description: applicationDescription,
-		Roles: applicationRoles,
+		Roles: 	buildRoles(),
 	}
 	applicationJSON, err := json.Marshal(&application)
 	if err != nil {
@@ -93,4 +100,28 @@ func buildApplicationJSON() []byte {
 	}
 	fmt.Printf("applicationJson %+v\n", string(applicationJSON))
 	return applicationJSON
+}
+
+func buildRoles() []role {
+	var rolesPerContext = make(map[string][]string)
+	for _, roleAndContext := range applicationRoles {
+		role, context := splitRoleAndContext(roleAndContext)
+
+		rolesPerContext[context] = append(rolesPerContext[context], role)
+	}
+
+	var returnValue []role
+	for context, roles := range rolesPerContext {
+		newRole := role{
+			Context: context,
+			Roles: roles,
+		}
+		returnValue = append(returnValue, newRole)
+	}
+	return returnValue;
+}
+
+func splitRoleAndContext(roleAndContext string) (string, string) {
+	x := strings.Split(roleAndContext, "@")
+	return x[0], x[1]
 }
