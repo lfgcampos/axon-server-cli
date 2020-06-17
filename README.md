@@ -15,7 +15,7 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 [Axon Server Enterprise edition](https://axoniq.io/product-overview/axon-server-enterprise) supports these additional commands:‌
 
 * [x] applications
-* [ ] register-application
+* [x] register-application
 * [ ] delete-application
 * [ ] init-cluster
 * [ ] cluster

@@ -98,7 +98,12 @@ func buildApplicationJSON() []byte {
 	if err != nil {
 		log.Fatal("Error building the application json. ", err)
 	}
-	fmt.Printf("applicationJson %+v\n", string(applicationJSON))
+	prettyJSON, err := json.MarshalIndent(application, "", "  ")
+	if err != nil {
+        log.Fatal("Failed to generate json", err)
+    }
+	fmt.Printf("applicationJson:\n%s\n", string(prettyJSON))
+	fmt.Println("applicationJson:")
 	return applicationJSON
 }
 
