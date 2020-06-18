@@ -38,8 +38,8 @@ func init() {
 }
 
 func listContexts(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + contextListUrl)
-	req, err := http.NewRequest("GET", viper.GetString("server")+contextListUrl, nil)
+	log.Println("calling: " + viper.GetString("server") + contextListURL)
+	req, err := http.NewRequest("GET", viper.GetString("server")+contextListURL, nil)
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}

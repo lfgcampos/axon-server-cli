@@ -19,7 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var contextListUrl = "/v1/public/context"
+var contextListURL = "/v1/public/context"
+var contextRegisterURL = "/v1/context"
 
 var contextCmd = &cobra.Command{
 	Use:     "context",
