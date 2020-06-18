@@ -19,7 +19,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var applicationListUrl = "/v1/public/applications"
+var applicationListURL = "/v1/public/applications"
+var applicationRegisterURL = "/v1/applications"
 
 var applicationCmd = &cobra.Command{
 	Use:     "application",

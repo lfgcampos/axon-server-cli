@@ -38,8 +38,8 @@ func init() {
 }
 
 func listApplications(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + applicationListUrl)
-	req, err := http.NewRequest("GET", viper.GetString("server")+applicationListUrl, nil)
+	log.Println("calling: " + viper.GetString("server") + applicationListURL)
+	req, err := http.NewRequest("GET", viper.GetString("server")+applicationListURL, nil)
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}
