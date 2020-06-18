@@ -46,7 +46,7 @@ type nodeAndRole struct {
 }
 
 type contextNode struct {
-	Context string        `json:"contextNew"`
+	Context string        `json:"context"`
 	Nodes   []string      `json:"nodes"`
 	Roles   []nodeAndRole `json:"roles"`
 }
@@ -54,19 +54,19 @@ type contextNode struct {
 var contextRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
-	Short:   "Register a contextNew",
-	Long:    `register a contextNew on axonserver`,
+	Short:   "Register a context",
+	Long:    `register a context on axonserver`,
 	Run:     createContext,
 }
 
 func init() {
 	contextCmd.AddCommand(contextRegisterCmd)
 
-	contextRegisterCmd.Flags().StringVarP(&context, "contextNew", "c", "", "Name of the contextNew")
-	contextRegisterCmd.Flags().StringSliceVarP(&nodes, "nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for contextNew")
-	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for contextNew")
-	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for contextNew")
-	contextRegisterCmd.Flags().StringSliceVarP(&messagingOnly, "messagingOnly", "m", []string{}, "[Optional - Enterprise Edition only] messaging-only member nodes for contextNew")
+	contextRegisterCmd.Flags().StringVarP(&context, "context", "c", "", "Name of the context")
+	contextRegisterCmd.Flags().StringSliceVarP(&nodes, "nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for context")
+	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
+	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")
+	contextRegisterCmd.Flags().StringSliceVarP(&messagingOnly, "messagingOnly", "m", []string{}, "[Optional - Enterprise Edition only] messaging-only member nodes for context")
 }
 
 func createContext(cmd *cobra.Command, args []string) {
