@@ -22,7 +22,7 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 * [ ] register-node
 * [ ] unregister-node
 * [x] contexts
-* [ ] register-context
+* [x] register-context
 * [ ] delete-context
 * [ ] add-node-to-context
 * [ ] delete-node-from-context
