@@ -44,8 +44,9 @@ func init() {
 }
 
 func deleteUser(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + userDeleteURL + usernameDelete)
-	req, err := http.NewRequest("DELETE", viper.GetString("server")+userDeleteURL+usernameDelete, nil)
+	url := fmt.Sprintf(userDeleteURL, usernameDelete)
+	log.Println("calling: " + viper.GetString("server") + url)
+	req, err := http.NewRequest("DELETE", viper.GetString("server")+url, nil)
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}
