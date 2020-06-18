@@ -17,19 +17,9 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-var listUserUrl = "/v1/public/users"
-var registerUserUrl = "/v1/users"
-var deleteUserUrl = "/v1/users/" //{username}
-
-var username, password string
-
-var roles []string
-
-type user struct {
-	username string   `json:"userName"`
-	password string   `json:"password"`
-	roles    []string `json:"roles"`
-}
+var userListURL = "/v1/public/users"
+var userRegisterURL = "/v1/users"
+var userDeleteURL = "/v1/users/" //{username}
 
 var userCmd = &cobra.Command{
 	Use:     "user",

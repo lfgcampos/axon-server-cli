@@ -25,6 +25,10 @@ import (
 	"time"
 )
 
+var (
+	usernameDelete string
+)
+
 // userDeleteCmd represents the deleteUser command
 var userDeleteCmd = &cobra.Command{
 	Use:     "delete",
@@ -36,12 +40,12 @@ var userDeleteCmd = &cobra.Command{
 
 func init() {
 	userCmd.AddCommand(userDeleteCmd)
-	userDeleteCmd.Flags().StringVarP(&username, "username", "u", "", "user username")
+	userDeleteCmd.Flags().StringVarP(&usernameDelete, "username", "u", "", "user username")
 }
 
 func deleteUser(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + deleteUserUrl + username)
-	req, err := http.NewRequest("DELETE", viper.GetString("server")+deleteUserUrl+username, nil)
+	log.Println("calling: " + viper.GetString("server") + userDeleteURL + usernameDelete)
+	req, err := http.NewRequest("DELETE", viper.GetString("server")+userDeleteURL+usernameDelete, nil)
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}

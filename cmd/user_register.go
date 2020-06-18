@@ -27,6 +27,17 @@ import (
 	"time"
 )
 
+var (
+	usernameRegister, password string
+	roles                      []string
+)
+
+type user struct {
+	Username string   `json:"userName"`
+	Password string   `json:"password"`
+	Roles    []string `json:"roles"`
+}
+
 var userRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
@@ -38,15 +49,15 @@ var userRegisterCmd = &cobra.Command{
 func init() {
 	userCmd.AddCommand(userRegisterCmd)
 
-	userRegisterCmd.Flags().StringVarP(&username, "username", "u", "", "user username")
+	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "user username")
 	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "user password")
 	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "user roles")
 }
 
 func registerUser(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + registerUserUrl)
+	log.Println("calling: " + viper.GetString("server") + userRegisterURL)
 	userJson := buildUserJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+registerUserUrl, bytes.NewBuffer(userJson))
+	req, err := http.NewRequest("POST", viper.GetString("server")+userRegisterURL, bytes.NewBuffer(userJson))
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}
@@ -67,9 +78,9 @@ func registerUser(cmd *cobra.Command, args []string) {
 
 func buildUserJson() []byte {
 	user := &user{
-		username: username,
-		password: password,
-		roles:    roles,
+		Username: usernameRegister,
+		Password: password,
+		Roles:    roles,
 	}
 	userJson, err := json.Marshal(&user)
 	if err != nil {
