@@ -21,6 +21,7 @@ import (
 
 var applicationListURL = "/v1/public/applications"
 var applicationRegisterURL = "/v1/applications"
+var applicationDeleteURL = "/v1/applications/%s" //applicationDelete
 
 var applicationCmd = &cobra.Command{
 	Use:     "application",
