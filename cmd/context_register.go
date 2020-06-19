@@ -36,7 +36,7 @@ const (
 )
 
 var (
-	context                                           string
+	contextRegister                                   string
 	nodes, activeBackup, passiveBackup, messagingOnly []string
 )
 
@@ -62,7 +62,7 @@ var contextRegisterCmd = &cobra.Command{
 func init() {
 	contextCmd.AddCommand(contextRegisterCmd)
 
-	contextRegisterCmd.Flags().StringVarP(&context, "context", "c", "", "Name of the context")
+	contextRegisterCmd.Flags().StringVarP(&contextRegister, "context", "c", "", "Name of the context")
 	contextRegisterCmd.Flags().StringSliceVarP(&nodes, "nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")
@@ -101,7 +101,7 @@ func buildContextJson() []byte {
 	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, messagingOnly, roleMessagingOnly)
 
 	contextNode := &contextNode{
-		Context: context,
+		Context: contextRegister,
 		Nodes:   definedNodes,
 		Roles:   nodesAndRoles,
 	}

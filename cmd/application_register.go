@@ -56,7 +56,7 @@ func init() {
 
 	applicationRegisterCmd.Flags().StringVarP(&applicationName, "name", "a", "", "application name")
 	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "application description")
-	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "application roles. Please write them as comma separated values, and separate the context and role with an @ sign. Example: CONTEXT@ROLE1,CONTEXT@ROLE2,...")
+	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "application roles. Please write them as comma separated values, and separate the context and role with an @ sign. Example: ROLE1@CONTEXT,ROLE2@CONTEXT,...")
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {

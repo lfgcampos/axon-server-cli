@@ -21,6 +21,7 @@ import (
 
 var contextListURL = "/v1/public/context"
 var contextRegisterURL = "/v1/context"
+var contextDeleteURL = "/v1/context/%s" //contextDelete
 
 var contextCmd = &cobra.Command{
 	Use:     "context",
