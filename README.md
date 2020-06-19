@@ -16,14 +16,14 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 
 * [x] applications
 * [x] register-application
-* [ ] delete-application
+* [x] delete-application
 * [ ] init-cluster
 * [ ] cluster
 * [ ] register-node
 * [ ] unregister-node
 * [x] contexts
 * [x] register-context
-* [ ] delete-context
+* [x] delete-context
 * [ ] add-node-to-context
 * [ ] delete-node-from-context
 
