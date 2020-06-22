@@ -16,15 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/utils"
 )
 
 var (
@@ -58,37 +56,24 @@ func init() {
 }
 
 func registerUser(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + userRegisterURL)
-	userJson := buildUserJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+userRegisterURL, bytes.NewBuffer(userJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	registerUserURL := fmt.Sprintf("%s%s", viper.GetString("server"), userRegisterURL)
+	userJSON := buildUserJSON()
+	log.Printf("calling: %s\n", registerUserURL)
+
+	responseBody := utils.POST(registerUserURL, userJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
-func buildUserJson() []byte {
+func buildUserJSON() []byte {
 	user := &user{
 		Username: usernameRegister,
 		Password: password,
 		Roles:    roles,
 	}
-	userJson, err := json.Marshal(&user)
+	userJSON, err := json.Marshal(&user)
 	if err != nil {
 		log.Fatal("Error building the user json. ", err)
 	}
-	fmt.Printf("userJson: %+v\n", string(userJson))
-	return userJson
+	fmt.Printf("userJson: %+v\n", string(userJSON))
+	return userJSON
 }

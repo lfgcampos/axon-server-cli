@@ -16,15 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/utils"
 )
 
 // constants
@@ -72,25 +70,12 @@ func init() {
 }
 
 func createContext(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + contextRegisterURL)
-	userJson := buildContextJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+contextRegisterURL, bytes.NewBuffer(userJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	registerContextURL := fmt.Sprintf("%s%s", viper.GetString("server"), contextRegisterURL)
+	contextJSON := buildContextJson()
+	log.Printf("calling: %s\n", registerContextURL)
+
+	responseBody := utils.POST(registerContextURL, contextJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
 func buildContextJson() []byte {

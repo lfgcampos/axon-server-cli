@@ -16,15 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/utils"
 )
 
 var (
@@ -68,27 +66,16 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 	}
 
 	log.Println("calling: " + viper.GetString("server") + clusterRegisterNodeURL)
-	clusterNodeJson := buildClusterNodeJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+
+	registerClusterNodeURL := fmt.Sprintf("%s%s", viper.GetString("server"), clusterRegisterNodeURL)
+	clusterNodeJSON := buildClusterNodeJSON()
+	log.Printf("calling: %s\n", registerClusterNodeURL)
+
+	responseBody := utils.POST(registerClusterNodeURL, clusterNodeJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
-func buildClusterNodeJson() []byte {
+func buildClusterNodeJSON() []byte {
 	clusterNode := &clusterNode{
 		InternalHostName: internalHost,
 		InternalGrpcPort: internalPort,

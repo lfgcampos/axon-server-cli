@@ -16,6 +16,7 @@ limitations under the License.
 package utils
 
 import (
+	"bytes"
 	"log"
 	"time"
 	"net/http"
@@ -38,6 +39,7 @@ func GET(url string) []byte {
 	if err != nil {
 		log.Fatal("Error reading request ", err)
 	}
+
 	req.Header.Set(tokenKey, token)
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -51,4 +53,27 @@ func GET(url string) []byte {
 		log.Fatal("Error reading body. ", err)
 	}
 	return body;
+}
+
+// POST - Executes POST on the given URL, with the given body
+func POST(url string, requestBody []byte)[] byte {
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Fatal("Error reading request.", err)
+	}
+
+	req.Header.Set(tokenKey, token)
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{Timeout: time.Second * 10}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal("Error reading response. ", err)
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal("Error reading body. ", err)
+	}
+	return responseBody
 }

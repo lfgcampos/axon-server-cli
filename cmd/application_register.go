@@ -16,17 +16,15 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"axon-server-cli/utils"
 )
 
 type application struct {
@@ -63,29 +61,12 @@ func init() {
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {
-	applicationURL := viper.GetString("server") + applicationRegisterURL
-	log.Printf("calling: %s", applicationURL)
+	applicationURL := fmt.Sprintf("%s%s", viper.GetString("server"), applicationRegisterURL)
 	postBody := buildApplicationJSON()
-	req, err := http.NewRequest("POST", applicationURL, bytes.NewBuffer(postBody))
-	if err != nil {
-		log.Fatal("Error reading request.", err)
-	}
+	log.Printf("calling: %s\n", applicationURL)
 
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, "application/json")
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-
-	fmt.Printf("%s\n", body)
+	responseBody := utils.POST(applicationURL, postBody)
+	fmt.Printf("%s\n", responseBody)
 }
 
 func buildApplicationJSON() []byte {
