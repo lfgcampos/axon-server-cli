@@ -42,16 +42,17 @@ var userRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
 	Short:   "Register a user",
-	Long:    `register a user to be used on axonserver`,
+	Long:    `Registers a user with specified roles. If no roles are specified, Axon Server registers the user with READ role. Specify multiple roles by giving a comma separated list (without spaces), e.g. READ,ADMIN.
+If you do not specify a password with the -p option, the command line interface will prompt you for one.`,
 	Run:     registerUser,
 }
 
 func init() {
 	userCmd.AddCommand(userRegisterCmd)
 
-	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "user username")
-	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "user password")
-	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "user roles")
+	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "*Username")
+	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "[Optional] Password for the user")
+	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "[Optional] roles for the user")
 	// required flags
 	userRegisterCmd.MarkFlagRequired("username")
 }

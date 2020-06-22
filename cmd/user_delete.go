@@ -33,14 +33,14 @@ var (
 var userDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"d"},
-	Short:   "Remove a user",
-	Long:    `remove a user from axonserver`,
+	Short:   "Remove the user",
+	Long:    `Deletes the specified user from axonserver.`,
 	Run:     deleteUser,
 }
 
 func init() {
 	userCmd.AddCommand(userDeleteCmd)
-	userDeleteCmd.Flags().StringVarP(&usernameDelete, "username", "u", "", "user username")
+	userDeleteCmd.Flags().StringVarP(&usernameDelete, "username", "u", "", "*user username")
 	// required flags
 	userDeleteCmd.MarkFlagRequired("username")
 }

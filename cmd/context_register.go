@@ -54,15 +54,15 @@ type contextNode struct {
 var contextRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
-	Short:   "Register a context",
-	Long:    `register a context on axonserver`,
+	Short:   "Creates a new context",
+	Long:    `Creates a new context, with the specified nodes assigned to it. If you do not specify nodes, all nodes will be assigned to the context.`,
 	Run:     createContext,
 }
 
 func init() {
 	contextCmd.AddCommand(contextRegisterCmd)
 
-	contextRegisterCmd.Flags().StringVarP(&contextRegister, "context", "c", "", "Name of the context")
+	contextRegisterCmd.Flags().StringVarP(&contextRegister, "context", "c", "", "*Name of the context")
 	contextRegisterCmd.Flags().StringSliceVarP(&nodes, "nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")

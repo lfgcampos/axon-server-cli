@@ -44,7 +44,7 @@ type clusterNode struct {
 var clusterRegisterNodeCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
-	Short:   "register a node to the clusters",
+	Short:   "Register a node to the cluster",
 	Long: `Tells this Axon Server node to join a cluster. You need to specify the hostname and optionally the internal port number of a node that is the leader of the _admin context. If you do not specify the internal port number it uses 8224 (default internal port number for Axon Server).
 	If you specify a context, the new node will be a member of the specified context. If you haven't specified a context, the new node will become a member of all the contexts which the _admin leader is a part of.`,
 	Run: registerNodeToCluster,
@@ -53,8 +53,8 @@ var clusterRegisterNodeCmd = &cobra.Command{
 func init() {
 	clusterCmd.AddCommand(clusterRegisterNodeCmd)
 	// flags
-	clusterRegisterNodeCmd.Flags().StringVarP(&internalHost, "internal-host", "i", "", "Internal hostname of the node")
-	clusterRegisterNodeCmd.Flags().StringVarP(&internalPort, "internal-port", "p", "8224", "Internal port of the node (default 8224)")
+	clusterRegisterNodeCmd.Flags().StringVarP(&internalHost, "internal-host", "i", "", "*Internal hostname of the node")
+	clusterRegisterNodeCmd.Flags().StringVarP(&internalPort, "internal-port", "p", "8224", "Internal port of the node")
 	clusterRegisterNodeCmd.Flags().StringVarP(&contextToRegister, "context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
 	clusterRegisterNodeCmd.Flags().BoolVarP(&noContext, "no-contexts", "", false, "[Optional - Enterprise Edition only] add node to cluster, but don't register it in any contexts")
 	// required flags

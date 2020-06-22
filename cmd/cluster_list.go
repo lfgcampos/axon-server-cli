@@ -28,7 +28,7 @@ import (
 var clusterListCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
-	Short:   "list all clusters",
+	Short:   "List all clusters",
 	Long:    `Shows all the nodes in the cluster, including their hostnames, http ports and grpc ports.`,
 	Run:     listClusters,
 }

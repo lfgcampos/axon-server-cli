@@ -47,16 +47,17 @@ var applicationRegisterCmd = &cobra.Command{
 	Use:   "register",
 	Aliases: []string{"r"},
 	Short: "Register an application",
-	Long: `use to register an application on the server`,
+	Long: `Registers an application with specified name. Roles is a comma seperated list of roles per context, where a role per context is the combination of @, e.g. READ@context1,WRITE@context2. If you do not specify the context for the role it will be for context default.
+	If you omit the -T option, Axon Server will generate a unique token for you. Applications must use this token to access Axon Server. Note that this token is only returned once, you will not be able to retrieve this token later.`,
 	Run: registerApplication,
 }
 
 func init() {
 	applicationCmd.AddCommand(applicationRegisterCmd)
 
-	applicationRegisterCmd.Flags().StringVarP(&applicationName, "name", "a", "", "application name")
-	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "application description")
-	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "application roles. Please write them as comma separated values, and separate the context and role with an @ sign. Example: ROLE1@CONTEXT,ROLE2@CONTEXT,...")
+	applicationRegisterCmd.Flags().StringVarP(&applicationName, "name", "a", "", "*Name of the application")
+	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "[Optional] Description of the application")
+	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "Roles for the application, use role@context")
 	// required flags
 	applicationRegisterCmd.MarkFlagRequired("name")
 }

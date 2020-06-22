@@ -33,14 +33,14 @@ var (
 var applicationDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"d"},
-	Short:   "Remove an application",
-	Long:    `remove an application from axonserver`,
+	Short:   "Deletes the application",
+	Long:    `Deletes the application from Axon Server. Applications will no longer be able to connect to Axon Server using this token.`,
 	Run:     deleteApplication,
 }
 
 func init() {
 	applicationCmd.AddCommand(applicationDeleteCmd)
-	applicationDeleteCmd.Flags().StringVarP(&applicationDelete, "application", "a", "", "Name of the application")
+	applicationDeleteCmd.Flags().StringVarP(&applicationDelete, "application", "a", "", "*Name of the application")
 	// required flags
 	applicationDeleteCmd.MarkFlagRequired("application")
 }

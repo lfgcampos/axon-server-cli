@@ -26,7 +26,7 @@ var applicationDeleteURL = "/v1/applications/%s" //applicationDelete
 var applicationCmd = &cobra.Command{
 	Use:     "application",
 	Aliases: []string{"a"},
-	Short:   "commands related to applications",
+	Short:   "Commands related to applications",
 	Long:    `This is the command related to applications`,
 }
 

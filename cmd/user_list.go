@@ -28,8 +28,8 @@ import (
 var userListCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
-	Short:   "list all the users",
-	Long:    `use to list all the users on the server`,
+	Short:   "List all users",
+	Long:    `Returns a list of all registered users and their roles.`,
 	Run:     listUsers,
 }
 

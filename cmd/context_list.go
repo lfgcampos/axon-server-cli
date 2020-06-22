@@ -28,8 +28,8 @@ import (
 var contextListCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
-	Short:   "list all the contexts",
-	Long:    `use to list all the contexts on the server`,
+	Short:   "List all contexts",
+	Long:    `Lists all contexts and the nodes assigned to the contexts. Per context it shows the master (responsible for replicating events) and the coordinator (responsible for rebalancing).`,
 	Run:     listContexts,
 }
 

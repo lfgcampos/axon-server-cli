@@ -32,7 +32,7 @@ var (
 var clusterUnregisterNodeCmd = &cobra.Command{
 	Use:     "unregister",
 	Aliases: []string{"u"},
-	Short:   "unregister a node to the clusters",
+	Short:   "Unregister a node from the cluster",
 	Long:    `Removes the node with specified name from the cluster. After this, the node that is deleted will still be running in standalone mode`,
 	Run:     unregisterNodeToCluster,
 }
@@ -40,7 +40,7 @@ var clusterUnregisterNodeCmd = &cobra.Command{
 func init() {
 	clusterCmd.AddCommand(clusterUnregisterNodeCmd)
 	// flags
-	clusterUnregisterNodeCmd.Flags().StringVarP(&nodename, "node", "n", "", "Name of the node")
+	clusterUnregisterNodeCmd.Flags().StringVarP(&nodename, "node", "n", "", "*Name of the node")
 	// required flags
 	clusterUnregisterNodeCmd.MarkFlagRequired("node")
 }
