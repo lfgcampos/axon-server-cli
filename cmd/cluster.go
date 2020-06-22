@@ -21,6 +21,7 @@ var (
 	clusterListURL           = "/v1/public"
 	clusterRegisterNodeURL   = "/v1/cluster"
 	clusterUnregisterNodeURL = "/v1/cluster/%s"
+	clusterInitURL           = "/v1/context/init"
 )
 
 var clusterCmd = &cobra.Command{

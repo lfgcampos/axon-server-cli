@@ -17,7 +17,7 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 * [x] applications
 * [x] register-application
 * [x] delete-application
-* [ ] init-cluster
+* [x] init-cluster
 * [x] cluster
 * [x] register-node
 * [x] unregister-node
