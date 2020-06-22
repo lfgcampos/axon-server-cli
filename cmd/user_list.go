@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/utils"
+
 )
 
 var userListCmd = &cobra.Command{
@@ -38,21 +38,8 @@ func init() {
 }
 
 func listUsers(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + userListURL)
-	req, err := http.NewRequest("GET", viper.GetString("server")+userListURL, nil)
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
+	listUsersURL := fmt.Sprintf("%s%s", viper.GetString("server"), userListURL)
+	log.Printf("calling: %s\n", listUsersURL)
+	body := utils.GET(listUsersURL)
 	fmt.Printf("%s\n", body)
 }

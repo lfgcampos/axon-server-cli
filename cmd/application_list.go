@@ -19,10 +19,9 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/utils"
 )
 
 var applicationListCmd = &cobra.Command{
@@ -38,21 +37,8 @@ func init() {
 }
 
 func listApplications(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + applicationListURL)
-	req, err := http.NewRequest("GET", viper.GetString("server")+applicationListURL, nil)
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
+	listApplicationsURL := fmt.Sprintf("%s%s", viper.GetString("server"), applicationListURL)
+	log.Printf("calling: %s\n", listApplicationsURL)
+	body := utils.GET(listApplicationsURL)
 	fmt.Printf("%s\n", body)
 }
