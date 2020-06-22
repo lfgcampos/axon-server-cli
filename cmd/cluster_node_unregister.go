@@ -41,6 +41,8 @@ func init() {
 	clusterCmd.AddCommand(clusterUnregisterNodeCmd)
 	// flags
 	clusterUnregisterNodeCmd.Flags().StringVarP(&nodename, "node", "n", "", "Name of the node")
+	// required flags
+	clusterUnregisterNodeCmd.MarkFlagRequired("node")
 }
 
 func unregisterNodeToCluster(cmd *cobra.Command, args []string) {

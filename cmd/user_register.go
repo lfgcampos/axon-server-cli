@@ -52,6 +52,8 @@ func init() {
 	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "user username")
 	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "user password")
 	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "user roles")
+	// required flags
+	userRegisterCmd.MarkFlagRequired("username")
 }
 
 func registerUser(cmd *cobra.Command, args []string) {

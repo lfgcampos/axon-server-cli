@@ -41,6 +41,8 @@ var contextDeleteCmd = &cobra.Command{
 func init() {
 	contextCmd.AddCommand(contextDeleteCmd)
 	contextDeleteCmd.Flags().StringVarP(&contextDelete, "context", "c", "", "Name of the context")
+	// required flags
+	contextDeleteCmd.MarkFlagRequired("context")
 }
 
 func deleteContext(cmd *cobra.Command, args []string) {

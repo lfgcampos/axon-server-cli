@@ -57,6 +57,8 @@ func init() {
 	clusterRegisterNodeCmd.Flags().StringVarP(&internalPort, "internal-port", "p", "8224", "Internal port of the node (default 8224)")
 	clusterRegisterNodeCmd.Flags().StringVarP(&contextToRegister, "context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
 	clusterRegisterNodeCmd.Flags().BoolVarP(&noContext, "no-contexts", "", false, "[Optional - Enterprise Edition only] add node to cluster, but don't register it in any contexts")
+	// required flags
+	clusterRegisterNodeCmd.MarkFlagRequired("internal-host")
 }
 
 func registerNodeToCluster(cmd *cobra.Command, args []string) {
@@ -67,7 +69,7 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 
 	log.Println("calling: " + viper.GetString("server") + clusterRegisterNodeURL)
 	clusterNodeJson := buildClusterNodeJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
+	req, err := http.NewRequest("ur", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}

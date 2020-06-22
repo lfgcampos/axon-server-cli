@@ -41,6 +41,8 @@ var userDeleteCmd = &cobra.Command{
 func init() {
 	userCmd.AddCommand(userDeleteCmd)
 	userDeleteCmd.Flags().StringVarP(&usernameDelete, "username", "u", "", "user username")
+	// required flags
+	userDeleteCmd.MarkFlagRequired("username")
 }
 
 func deleteUser(cmd *cobra.Command, args []string) {

@@ -41,6 +41,8 @@ var applicationDeleteCmd = &cobra.Command{
 func init() {
 	applicationCmd.AddCommand(applicationDeleteCmd)
 	applicationDeleteCmd.Flags().StringVarP(&applicationDelete, "application", "a", "", "Name of the application")
+	// required flags
+	applicationDeleteCmd.MarkFlagRequired("application")
 }
 
 func deleteApplication(cmd *cobra.Command, args []string) {

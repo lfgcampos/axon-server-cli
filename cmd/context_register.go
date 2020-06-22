@@ -67,6 +67,8 @@ func init() {
 	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")
 	contextRegisterCmd.Flags().StringSliceVarP(&messagingOnly, "messagingOnly", "m", []string{}, "[Optional - Enterprise Edition only] messaging-only member nodes for context")
+	// required flags
+	contextRegisterCmd.MarkFlagRequired("context")
 }
 
 func createContext(cmd *cobra.Command, args []string) {
