@@ -69,7 +69,7 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 
 	log.Println("calling: " + viper.GetString("server") + clusterRegisterNodeURL)
 	clusterNodeJson := buildClusterNodeJson()
-	req, err := http.NewRequest("ur", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
+	req, err := http.NewRequest("POST", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
 	if err != nil {
 		log.Fatal("Error reading request. ", err)
 	}
