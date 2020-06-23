@@ -50,11 +50,12 @@ func GET(url string) []byte {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading body. ", err)
+		log.Fatal("Error reading response body. ", err)
 	}
-	return body
+
+	return responseBody
 }
 
 // POST - Executes POST on the given URL, with the given body
@@ -75,7 +76,32 @@ func POST(url string, requestBody []byte) []byte {
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading body. ", err)
+		log.Fatal("Error reading response body. ", err)
 	}
+
+	return responseBody
+}
+
+// DELETE - Execut DELETE on the given URL, with the given body.
+func DELETE(url string) []byte {
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		log.Fatal("Error reading the request. ", err)
+	}
+
+	req.Header.Set(tokenKey, token)
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{Timeout: time.Second * 10}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal("Error reading response. ", err)
+	}
+	defer resp.Body.Close()
+
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal("Error reading response body. ", err)
+	}
+
 	return responseBody
 }
