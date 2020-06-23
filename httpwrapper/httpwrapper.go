@@ -1,4 +1,6 @@
 /*
+Package httpwrapper contains a small wrapper for go's native http methods.
+
 Copyright © 2020 Dusan Perkovic <dusan.perkovic@axoniq.io>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +15,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package utils
+package httpwrapper
 
 import (
 	"bytes"
-	"log"
-	"time"
-	"net/http"
 	"io/ioutil"
+	"log"
+	"net/http"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -52,11 +54,11 @@ func GET(url string) []byte {
 	if err != nil {
 		log.Fatal("Error reading body. ", err)
 	}
-	return body;
+	return body
 }
 
 // POST - Executes POST on the given URL, with the given body
-func POST(url string, requestBody []byte)[] byte {
+func POST(url string, requestBody []byte) []byte {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		log.Fatal("Error reading request.", err)

@@ -16,13 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 
-	"axon-server-cli/utils"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -71,7 +71,7 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 	clusterNodeJSON := buildClusterNodeJSON()
 	log.Printf("calling: %s\n", registerClusterNodeURL)
 
-	responseBody := utils.POST(registerClusterNodeURL, clusterNodeJSON)
+	responseBody := httpwrapper.POST(registerClusterNodeURL, clusterNodeJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 

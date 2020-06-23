@@ -18,11 +18,12 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 
-	"axon-server-cli/utils"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+
+	"axon-server-cli/httpwrapper"
 )
 
 // constants
@@ -74,7 +75,7 @@ func createContext(cmd *cobra.Command, args []string) {
 	contextJSON := buildContextJson()
 	log.Printf("calling: %s\n", registerContextURL)
 
-	responseBody := utils.POST(registerContextURL, contextJSON)
+	responseBody := httpwrapper.POST(registerContextURL, contextJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 

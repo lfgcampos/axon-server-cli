@@ -16,12 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/httpwrapper"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 
-	"axon-server-cli/utils"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var applicationListCmd = &cobra.Command{
@@ -39,6 +39,6 @@ func init() {
 func listApplications(cmd *cobra.Command, args []string) {
 	listApplicationsURL := fmt.Sprintf("%s%s", viper.GetString("server"), applicationListURL)
 	log.Printf("calling: %s\n", listApplicationsURL)
-	body := utils.GET(listApplicationsURL)
+	body := httpwrapper.GET(listApplicationsURL)
 	fmt.Printf("%s\n", body)
 }

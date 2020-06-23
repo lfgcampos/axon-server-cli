@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -23,28 +24,26 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-
-	"axon-server-cli/utils"
 )
 
 type application struct {
-	Name string			`json:"name"`
-	Description string	`json:"description"`
-	Roles []role		`json:"roles"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Roles       []role `json:"roles"`
 }
 
 type role struct {
-	Context string	`json:"context"`
-	Roles []string	`json:"roles"`
+	Context string   `json:"context"`
+	Roles   []string `json:"roles"`
 }
 
 var applicationName, applicationDescription string
 var applicationRoles []string
 
 var applicationRegisterCmd = &cobra.Command{
-	Use:   "register",
+	Use:     "register",
 	Aliases: []string{"r"},
-	Short: "Register an application",
+	Short:   "Register an application",
 	Long: `Registers an application with specified name. Roles is a comma seperated list of roles per context, where a role per context is the combination of @, e.g. READ@context1,WRITE@context2. If you do not specify the context for the role it will be for context default.
 	If you omit the -T option, Axon Server will generate a unique token for you. Applications must use this token to access Axon Server. Note that this token is only returned once, you will not be able to retrieve this token later.`,
 	Run: registerApplication,
@@ -65,16 +64,16 @@ func registerApplication(cmd *cobra.Command, args []string) {
 	postBody := buildApplicationJSON()
 	log.Printf("calling: %s\n", applicationURL)
 
-	responseBody := utils.POST(applicationURL, postBody)
+	responseBody := httpwrapper.POST(applicationURL, postBody)
 	fmt.Printf("%s\n", responseBody)
 }
 
 func buildApplicationJSON() []byte {
 
 	application := &application{
-		Name: applicationName,
+		Name:        applicationName,
 		Description: applicationDescription,
-		Roles: 	buildRoles(),
+		Roles:       buildRoles(),
 	}
 	applicationJSON, err := json.Marshal(&application)
 	if err != nil {
@@ -82,8 +81,8 @@ func buildApplicationJSON() []byte {
 	}
 	prettyJSON, err := json.MarshalIndent(application, "", "  ")
 	if err != nil {
-        log.Fatal("Failed to generate json", err)
-    }
+		log.Fatal("Failed to generate json", err)
+	}
 	fmt.Printf("applicationJson:\n%s\n", string(prettyJSON))
 	fmt.Println("applicationJson:")
 	return applicationJSON
@@ -101,11 +100,11 @@ func buildRoles() []role {
 	for context, roles := range rolesPerContext {
 		newRole := role{
 			Context: context,
-			Roles: roles,
+			Roles:   roles,
 		}
 		returnValue = append(returnValue, newRole)
 	}
-	return returnValue;
+	return returnValue
 }
 
 func splitRoleAndContext(roleAndContext string) (string, string) {

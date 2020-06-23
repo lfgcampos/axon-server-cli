@@ -17,11 +17,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"log"
-	
-	"axon-server-cli/utils"
+
+	"axon-server-cli/httpwrapper"
 )
 
 var contextListCmd = &cobra.Command{
@@ -40,6 +41,6 @@ func listContexts(cmd *cobra.Command, args []string) {
 	listContextsURL := fmt.Sprintf("%s%s", viper.GetString("server"), contextListURL)
 
 	log.Printf("calling: %s\n", listContextsURL)
-	body := utils.GET(listContextsURL)
+	body := httpwrapper.GET(listContextsURL)
 	fmt.Printf("%s\n", body)
 }

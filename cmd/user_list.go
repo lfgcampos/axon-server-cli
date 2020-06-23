@@ -17,12 +17,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 
-	"axon-server-cli/utils"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
+	"axon-server-cli/httpwrapper"
 )
 
 var userListCmd = &cobra.Command{
@@ -40,6 +40,6 @@ func init() {
 func listUsers(cmd *cobra.Command, args []string) {
 	listUsersURL := fmt.Sprintf("%s%s", viper.GetString("server"), userListURL)
 	log.Printf("calling: %s\n", listUsersURL)
-	body := utils.GET(listUsersURL)
+	body := httpwrapper.GET(listUsersURL)
 	fmt.Printf("%s\n", body)
 }

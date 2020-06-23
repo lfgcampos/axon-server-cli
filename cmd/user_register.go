@@ -16,13 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"log"
 
-	"axon-server-cli/utils"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -40,9 +40,9 @@ var userRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
 	Short:   "Register a user",
-	Long:    `Registers a user with specified roles. If no roles are specified, Axon Server registers the user with READ role. Specify multiple roles by giving a comma separated list (without spaces), e.g. READ,ADMIN.
+	Long: `Registers a user with specified roles. If no roles are specified, Axon Server registers the user with READ role. Specify multiple roles by giving a comma separated list (without spaces), e.g. READ,ADMIN.
 If you do not specify a password with the -p option, the command line interface will prompt you for one.`,
-	Run:     registerUser,
+	Run: registerUser,
 }
 
 func init() {
@@ -60,7 +60,7 @@ func registerUser(cmd *cobra.Command, args []string) {
 	userJSON := buildUserJSON()
 	log.Printf("calling: %s\n", registerUserURL)
 
-	responseBody := utils.POST(registerUserURL, userJSON)
+	responseBody := httpwrapper.POST(registerUserURL, userJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 
