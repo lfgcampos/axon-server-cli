@@ -29,11 +29,6 @@ var (
 	server  string
 	token   string
 
-	// constants
-	axonTokenKey = "AxonIQ-Access-Token"
-	contentType  = "Content-Type"
-	jsonType     = "application/json"
-
 	rootCmd = &cobra.Command{
 		Use:   "axon-server-cli",
 		Short: "AxonServer-CLI in GO",

@@ -42,7 +42,8 @@ func GET(url string) []byte {
 		log.Fatal("Error reading request ", err)
 	}
 
-	req.Header.Set(tokenKey, token)
+	req.Header.Set("AxonIQ-Access-Token", token)
+
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -65,8 +66,9 @@ func POST(url string, requestBody []byte) []byte {
 		log.Fatal("Error reading request.", err)
 	}
 
-	req.Header.Set(tokenKey, token)
+	req.Header.Set("AxonIQ-Access-Token", token)
 	req.Header.Set("Content-Type", "application/json")
+
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -89,8 +91,9 @@ func DELETE(url string) []byte {
 		log.Fatal("Error reading the request. ", err)
 	}
 
-	req.Header.Set(tokenKey, token)
+	req.Header.Set("AxonIQ-Access-Token", token)
 	req.Header.Set("Content-Type", "application/json")
+	
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
