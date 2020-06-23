@@ -17,12 +17,12 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/httpwrapper"
 )
 
 var contextListCmd = &cobra.Command{
@@ -38,21 +38,9 @@ func init() {
 }
 
 func listContexts(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + contextListURL)
-	req, err := http.NewRequest("GET", viper.GetString("server")+contextListURL, nil)
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
+	url := fmt.Sprintf("%s/v1/public/context", viper.GetString("server"))
+
+	log.Printf("calling: %s\n", url)
+	body := httpwrapper.GET(url)
 	fmt.Printf("%s\n", body)
 }

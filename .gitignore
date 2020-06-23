@@ -5,6 +5,7 @@
 *.ipr
 
 # Binaries for programs and plugins
+axon-server-cli
 *.exe
 *.exe~
 *.dll

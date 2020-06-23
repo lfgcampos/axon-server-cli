@@ -17,13 +17,6 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-var (
-	clusterListURL           = "/v1/public"
-	clusterRegisterNodeURL   = "/v1/cluster"
-	clusterUnregisterNodeURL = "/v1/cluster/%s"
-	clusterInitURL           = "/v1/context/init"
-)
-
 var clusterCmd = &cobra.Command{
 	Use:   "cluster",
 	Short: "Commands related to the cluster",

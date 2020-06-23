@@ -16,15 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
 )
 
 var (
@@ -42,9 +40,9 @@ var userRegisterCmd = &cobra.Command{
 	Use:     "register",
 	Aliases: []string{"r"},
 	Short:   "Register a user",
-	Long:    `Registers a user with specified roles. If no roles are specified, Axon Server registers the user with READ role. Specify multiple roles by giving a comma separated list (without spaces), e.g. READ,ADMIN.
+	Long: `Registers a user with specified roles. If no roles are specified, Axon Server registers the user with READ role. Specify multiple roles by giving a comma separated list (without spaces), e.g. READ,ADMIN.
 If you do not specify a password with the -p option, the command line interface will prompt you for one.`,
-	Run:     registerUser,
+	Run: registerUser,
 }
 
 func init() {
@@ -58,37 +56,24 @@ func init() {
 }
 
 func registerUser(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + userRegisterURL)
-	userJson := buildUserJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+userRegisterURL, bytes.NewBuffer(userJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	url := fmt.Sprintf("%s/v1/users", viper.GetString("server"))
+	userJSON := buildUserJSON()
+	log.Printf("calling: %s\n", url)
+
+	responseBody := httpwrapper.POST(url, userJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
-func buildUserJson() []byte {
+func buildUserJSON() []byte {
 	user := &user{
 		Username: usernameRegister,
 		Password: password,
 		Roles:    roles,
 	}
-	userJson, err := json.Marshal(&user)
+	userJSON, err := json.Marshal(&user)
 	if err != nil {
 		log.Fatal("Error building the user json. ", err)
 	}
-	fmt.Printf("userJson: %+v\n", string(userJson))
-	return userJson
+	fmt.Printf("userJson: %+v\n", string(userJSON))
+	return userJSON
 }

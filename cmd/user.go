@@ -17,10 +17,6 @@ package cmd
 
 import "github.com/spf13/cobra"
 
-var userListURL = "/v1/public/users"
-var userRegisterURL = "/v1/users"
-var userDeleteURL = "/v1/users/%s" //usernameDelete
-
 var userCmd = &cobra.Command{
 	Use:     "user",
 	Aliases: []string{"u"},

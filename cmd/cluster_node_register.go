@@ -16,15 +16,13 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
 )
 
 var (
@@ -67,38 +65,27 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 		log.Fatal("Cannot specify a context when also using 'no-context' option.")
 	}
 
-	log.Println("calling: " + viper.GetString("server") + clusterRegisterNodeURL)
-	clusterNodeJson := buildClusterNodeJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+clusterRegisterNodeURL, bytes.NewBuffer(clusterNodeJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	url := fmt.Sprintf("%s/v1/cluster", viper.GetString("server"))
+	log.Printf("calling: %s\n", url)
+
+	clusterNodeJSON := buildClusterNodeJSON()
+	log.Printf("calling: %s\n", url)
+
+	responseBody := httpwrapper.POST(url, clusterNodeJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
-func buildClusterNodeJson() []byte {
+func buildClusterNodeJSON() []byte {
 	clusterNode := &clusterNode{
 		InternalHostName: internalHost,
 		InternalGrpcPort: internalPort,
 		Context:          contextToRegister,
 		NoContexts:       noContext,
 	}
-	clusterNodeJson, err := json.Marshal(&clusterNode)
+	clusterNodeJSON, err := json.Marshal(&clusterNode)
 	if err != nil {
 		log.Fatal("Error building the clusterNode json. ", err)
 	}
-	fmt.Printf("clusterNodeJson: %+v\n", string(clusterNodeJson))
-	return clusterNodeJson
+	fmt.Printf("clusterNodeJson: %+v\n", string(clusterNodeJSON))
+	return clusterNodeJSON
 }

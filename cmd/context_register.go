@@ -16,15 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
+
+	"axon-server-cli/httpwrapper"
 )
 
 // constants
@@ -72,28 +71,15 @@ func init() {
 }
 
 func createContext(cmd *cobra.Command, args []string) {
-	log.Println("calling: " + viper.GetString("server") + contextRegisterURL)
-	userJson := buildContextJson()
-	req, err := http.NewRequest("POST", viper.GetString("server")+contextRegisterURL, bytes.NewBuffer(userJson))
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, jsonType)
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	url := fmt.Sprintf("%s/v1/context", viper.GetString("server"))
+	contextJSON := buildContextJSON()
+	log.Printf("calling: %s\n", url)
+
+	responseBody := httpwrapper.POST(url, contextJSON)
+	fmt.Printf("%s\n", responseBody)
 }
 
-func buildContextJson() []byte {
+func buildContextJSON() []byte {
 	var nodesAndRoles []nodeAndRole
 	var definedNodes []string
 	// build nodes and nodesAndRoles
@@ -107,12 +93,12 @@ func buildContextJson() []byte {
 		Nodes:   definedNodes,
 		Roles:   nodesAndRoles,
 	}
-	contextNodeJson, err := json.Marshal(&contextNode)
+	contextNodeJSON, err := json.Marshal(&contextNode)
 	if err != nil {
 		log.Fatal("Error building the contextNode json. ", err)
 	}
-	fmt.Printf("contextNodeJson: %+v\n", string(contextNodeJson))
-	return contextNodeJson
+	fmt.Printf("contextNodeJson: %+v\n", string(contextNodeJSON))
+	return contextNodeJSON
 }
 
 func addNodes(definedNodes []string, nodesAndRoles []nodeAndRole, nodes []string, role string) ([]string, []nodeAndRole) {

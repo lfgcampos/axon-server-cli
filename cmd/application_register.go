@@ -16,37 +16,34 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
+	"axon-server-cli/httpwrapper"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"strings"
-	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 type application struct {
-	Name string			`json:"name"`
-	Description string	`json:"description"`
-	Roles []role		`json:"roles"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Roles       []role `json:"roles"`
 }
 
 type role struct {
-	Context string	`json:"context"`
-	Roles []string	`json:"roles"`
+	Context string   `json:"context"`
+	Roles   []string `json:"roles"`
 }
 
 var applicationName, applicationDescription string
 var applicationRoles []string
 
 var applicationRegisterCmd = &cobra.Command{
-	Use:   "register",
+	Use:     "register",
 	Aliases: []string{"r"},
-	Short: "Register an application",
+	Short:   "Register an application",
 	Long: `Registers an application with specified name. Roles is a comma seperated list of roles per context, where a role per context is the combination of @, e.g. READ@context1,WRITE@context2. If you do not specify the context for the role it will be for context default.
 	If you omit the -T option, Axon Server will generate a unique token for you. Applications must use this token to access Axon Server. Note that this token is only returned once, you will not be able to retrieve this token later.`,
 	Run: registerApplication,
@@ -63,37 +60,20 @@ func init() {
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {
-	applicationURL := viper.GetString("server") + applicationRegisterURL
-	log.Printf("calling: %s", applicationURL)
+	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
 	postBody := buildApplicationJSON()
-	req, err := http.NewRequest("POST", applicationURL, bytes.NewBuffer(postBody))
-	if err != nil {
-		log.Fatal("Error reading request.", err)
-	}
+	log.Printf("calling: %s\n", url)
 
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	req.Header.Set(contentType, "application/json")
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-
-	fmt.Printf("%s\n", body)
+	responseBody := httpwrapper.POST(url, postBody)
+	fmt.Printf("%s\n", responseBody)
 }
 
 func buildApplicationJSON() []byte {
 
 	application := &application{
-		Name: applicationName,
+		Name:        applicationName,
 		Description: applicationDescription,
-		Roles: 	buildRoles(),
+		Roles:       buildRoles(),
 	}
 	applicationJSON, err := json.Marshal(&application)
 	if err != nil {
@@ -101,8 +81,8 @@ func buildApplicationJSON() []byte {
 	}
 	prettyJSON, err := json.MarshalIndent(application, "", "  ")
 	if err != nil {
-        log.Fatal("Failed to generate json", err)
-    }
+		log.Fatal("Failed to generate json", err)
+	}
 	fmt.Printf("applicationJson:\n%s\n", string(prettyJSON))
 	fmt.Println("applicationJson:")
 	return applicationJSON
@@ -120,11 +100,11 @@ func buildRoles() []role {
 	for context, roles := range rolesPerContext {
 		newRole := role{
 			Context: context,
-			Roles: roles,
+			Roles:   roles,
 		}
 		returnValue = append(returnValue, newRole)
 	}
-	return returnValue;
+	return returnValue
 }
 
 func splitRoleAndContext(roleAndContext string) (string, string) {

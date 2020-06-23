@@ -19,10 +19,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var contextListURL = "/v1/public/context"
-var contextRegisterURL = "/v1/context"
-var contextDeleteURL = "/v1/context/%s" //contextDelete
-
 var contextCmd = &cobra.Command{
 	Use:     "context",
 	Aliases: []string{"c"},

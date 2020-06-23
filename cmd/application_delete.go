@@ -16,17 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/httpwrapper"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"time"
-)
-
-var (
-	applicationDelete string
 )
 
 // applicationDeleteCmd represents the applicationDelete command
@@ -40,28 +35,18 @@ var applicationDeleteCmd = &cobra.Command{
 
 func init() {
 	applicationCmd.AddCommand(applicationDeleteCmd)
-	applicationDeleteCmd.Flags().StringVarP(&applicationDelete, "application", "a", "", "*Name of the application")
+	applicationDeleteCmd.Flags().StringP("application", "a", "", "*Name of the application")
 	// required flags
 	applicationDeleteCmd.MarkFlagRequired("application")
 }
 
 func deleteApplication(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf(applicationDeleteURL, applicationDelete)
-	log.Println("calling: " + viper.GetString("server") + url)
-	req, err := http.NewRequest("DELETE", viper.GetString("server")+url, nil)
-	if err != nil {
-		log.Fatal("Error reading request. ", err)
-	}
-	req.Header.Set(axonTokenKey, viper.GetString("token"))
-	client := &http.Client{Timeout: time.Second * 10}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Error reading response. ", err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("Error reading body. ", err)
-	}
-	fmt.Printf("%s\n", body)
+	applicationName, _ := cmd.Flags().GetString("application")
+
+	url := fmt.Sprintf("%s/v1/applications/%s", viper.GetString("server"), applicationName)
+	log.Printf("calling: %s\n", url)
+
+	responseBody := httpwrapper.DELETE(url)
+
+	fmt.Printf("%s\n", responseBody)
 }
