@@ -84,7 +84,7 @@ func POST(url string, requestBody []byte) []byte {
 	return responseBody
 }
 
-// DELETE - Execut DELETE on the given URL, with the given body.
+// DELETE - Executes DELETE on the given URL, with the given body.
 func DELETE(url string) []byte {
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
