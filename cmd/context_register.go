@@ -71,15 +71,15 @@ func init() {
 }
 
 func createContext(cmd *cobra.Command, args []string) {
-	registerContextURL := fmt.Sprintf("%s%s", viper.GetString("server"), contextRegisterURL)
-	contextJSON := buildContextJson()
-	log.Printf("calling: %s\n", registerContextURL)
+	url := fmt.Sprintf("%s/v1/context", viper.GetString("server"))
+	contextJSON := buildContextJSON()
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.POST(registerContextURL, contextJSON)
+	responseBody := httpwrapper.POST(url, contextJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 
-func buildContextJson() []byte {
+func buildContextJSON() []byte {
 	var nodesAndRoles []nodeAndRole
 	var definedNodes []string
 	// build nodes and nodesAndRoles
@@ -93,12 +93,12 @@ func buildContextJson() []byte {
 		Nodes:   definedNodes,
 		Roles:   nodesAndRoles,
 	}
-	contextNodeJson, err := json.Marshal(&contextNode)
+	contextNodeJSON, err := json.Marshal(&contextNode)
 	if err != nil {
 		log.Fatal("Error building the contextNode json. ", err)
 	}
-	fmt.Printf("contextNodeJson: %+v\n", string(contextNodeJson))
-	return contextNodeJson
+	fmt.Printf("contextNodeJson: %+v\n", string(contextNodeJSON))
+	return contextNodeJSON
 }
 
 func addNodes(definedNodes []string, nodesAndRoles []nodeAndRole, nodes []string, role string) ([]string, []nodeAndRole) {

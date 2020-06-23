@@ -45,11 +45,10 @@ func init() {
 }
 
 func deleteContext(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf(contextDeleteURL, contextDelete)
-	fullDeleteURL := fmt.Sprintf(viper.GetString("server"), url)
-	log.Printf("calling: %s\n", fullDeleteURL)
+	url := fmt.Sprintf("%s/v1/context/%s", viper.GetString("server"), contextDelete)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.DELETE(fullDeleteURL)
+	responseBody := httpwrapper.DELETE(url)
 
 	fmt.Printf("%s\n", responseBody)
 }

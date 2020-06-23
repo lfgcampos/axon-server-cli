@@ -38,9 +38,9 @@ func init() {
 }
 
 func listContexts(cmd *cobra.Command, args []string) {
-	listContextsURL := fmt.Sprintf("%s%s", viper.GetString("server"), contextListURL)
+	url := fmt.Sprintf("%s/v1/public/context", viper.GetString("server"))
 
-	log.Printf("calling: %s\n", listContextsURL)
-	body := httpwrapper.GET(listContextsURL)
+	log.Printf("calling: %s\n", url)
+	body := httpwrapper.GET(url)
 	fmt.Printf("%s\n", body)
 }
