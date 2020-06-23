@@ -24,10 +24,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	applicationDelete string
-)
-
 // applicationDeleteCmd represents the applicationDelete command
 var applicationDeleteCmd = &cobra.Command{
 	Use:     "delete",
@@ -39,17 +35,18 @@ var applicationDeleteCmd = &cobra.Command{
 
 func init() {
 	applicationCmd.AddCommand(applicationDeleteCmd)
-	applicationDeleteCmd.Flags().StringVarP(&applicationDelete, "application", "a", "", "*Name of the application")
+	applicationDeleteCmd.Flags().StringP("application", "a", "", "*Name of the application")
 	// required flags
 	applicationDeleteCmd.MarkFlagRequired("application")
 }
 
 func deleteApplication(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf(applicationDeleteURL, applicationDelete)
-	fullDeleteURL := fmt.Sprintf(viper.GetString("server"), url)
-	log.Printf("calling: %s\n", fullDeleteURL)
+	applicationName, _ := cmd.Flags().GetString("application")
 
-	responseBody := httpwrapper.DELETE(fullDeleteURL)
+	url := fmt.Sprintf("%s/v1/applications/%s", viper.GetString("server"), applicationName)
+	log.Printf("calling: %s\n", url)
+
+	responseBody := httpwrapper.DELETE(url)
 
 	fmt.Printf("%s\n", responseBody)
 }

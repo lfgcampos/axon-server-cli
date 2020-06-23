@@ -37,8 +37,9 @@ func init() {
 }
 
 func listApplications(cmd *cobra.Command, args []string) {
-	listApplicationsURL := fmt.Sprintf("%s%s", viper.GetString("server"), applicationListURL)
-	log.Printf("calling: %s\n", listApplicationsURL)
-	body := httpwrapper.GET(listApplicationsURL)
-	fmt.Printf("%s\n", body)
+	url := fmt.Sprintf("%s/v1/public/applications", viper.GetString("server"))
+	
+	log.Printf("calling: %s\n", url)
+	responseBody := httpwrapper.GET(url)
+	fmt.Printf("%s\n", responseBody)
 }

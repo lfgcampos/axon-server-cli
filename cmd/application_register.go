@@ -60,11 +60,11 @@ func init() {
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {
-	applicationURL := fmt.Sprintf("%s%s", viper.GetString("server"), applicationRegisterURL)
+	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
 	postBody := buildApplicationJSON()
-	log.Printf("calling: %s\n", applicationURL)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.POST(applicationURL, postBody)
+	responseBody := httpwrapper.POST(url, postBody)
 	fmt.Printf("%s\n", responseBody)
 }
 
