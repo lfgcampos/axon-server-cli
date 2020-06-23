@@ -45,11 +45,10 @@ func init() {
 }
 
 func deleteUser(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf(userDeleteURL, usernameDelete)
-	fullDeleteURL := fmt.Sprintf(viper.GetString("server"), url)
-	log.Printf("calling: %s\n", fullDeleteURL)
+	url := fmt.Sprintf("%s/v1/users/%s", viper.GetString("server"), usernameDelete)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.DELETE(fullDeleteURL)
+	responseBody := httpwrapper.DELETE(url)
 
 	fmt.Printf("%s\n", responseBody)
 }

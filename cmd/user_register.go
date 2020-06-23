@@ -56,11 +56,11 @@ func init() {
 }
 
 func registerUser(cmd *cobra.Command, args []string) {
-	registerUserURL := fmt.Sprintf("%s%s", viper.GetString("server"), userRegisterURL)
+	url := fmt.Sprintf("%s/v1/users", viper.GetString("server"))
 	userJSON := buildUserJSON()
-	log.Printf("calling: %s\n", registerUserURL)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.POST(registerUserURL, userJSON)
+	responseBody := httpwrapper.POST(url, userJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 

@@ -38,8 +38,9 @@ func init() {
 }
 
 func listUsers(cmd *cobra.Command, args []string) {
-	listUsersURL := fmt.Sprintf("%s%s", viper.GetString("server"), userListURL)
-	log.Printf("calling: %s\n", listUsersURL)
-	body := httpwrapper.GET(listUsersURL)
-	fmt.Printf("%s\n", body)
+	url := fmt.Sprintf("%s/v1/public/users", viper.GetString("server"))
+	log.Printf("calling: %s\n", url)
+	
+	responseBody := httpwrapper.GET(url)
+	fmt.Printf("%s\n", responseBody)
 }
