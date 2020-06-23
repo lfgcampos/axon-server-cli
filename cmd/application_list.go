@@ -28,8 +28,8 @@ import (
 var applicationListCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l"},
-	Short:   "list all the applications",
-	Long:    `use to list all the applications on the server`,
+	Short:   "List all applications",
+	Long:    `Lists all applications and the roles per application per context.`,
 	Run:     listApplications,
 }
 

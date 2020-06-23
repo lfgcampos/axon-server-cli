@@ -55,9 +55,9 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is axonserver-cli.yaml)")
 
-	rootCmd.PersistentFlags().StringVarP(&server, "server", "S", "http://localhost:8024", "URL of AxonServer")
+	rootCmd.PersistentFlags().StringVarP(&server, "server", "S", "http://localhost:8024", "Server to send command to")
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
-	rootCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "Authentication Token")
+	rootCmd.PersistentFlags().StringVarP(&token, "access-token", "t", "", "[Optional] Access token to authenticate at server")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 
 	rootCmd.Version = "1.0"

@@ -33,14 +33,16 @@ var (
 var contextDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"d"},
-	Short:   "Remove a context",
-	Long:    `remove a context from axonserver`,
+	Short:   "Deletes the context.",
+	Long:    `Deletes the context from axonserver.`,
 	Run:     deleteContext,
 }
 
 func init() {
 	contextCmd.AddCommand(contextDeleteCmd)
-	contextDeleteCmd.Flags().StringVarP(&contextDelete, "context", "c", "", "Name of the context")
+	contextDeleteCmd.Flags().StringVarP(&contextDelete, "context", "c", "", "*Name of the context")
+	// required flags
+	contextDeleteCmd.MarkFlagRequired("context")
 }
 
 func deleteContext(cmd *cobra.Command, args []string) {

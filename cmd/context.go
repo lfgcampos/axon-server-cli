@@ -26,7 +26,7 @@ var contextDeleteURL = "/v1/context/%s" //contextDelete
 var contextCmd = &cobra.Command{
 	Use:     "context",
 	Aliases: []string{"c"},
-	Short:   "commands related to contexts",
+	Short:   "Commands related to contexts",
 	Long:    `This is the command related to contexts`,
 }
 
