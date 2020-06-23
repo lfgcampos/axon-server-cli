@@ -45,11 +45,10 @@ func init() {
 }
 
 func unregisterNodeToCluster(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf(clusterUnregisterNodeURL, nodename)
-	fullDeleteURL := fmt.Sprintf(viper.GetString("server"), url)
-	log.Printf("calling: %s\n", fullDeleteURL)
+	url := fmt.Sprintf("%s/v1/cluster/%s", viper.GetString("server"), nodename)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.DELETE(fullDeleteURL)
+	responseBody := httpwrapper.DELETE(url)
 
 	fmt.Printf("%s\n", responseBody)
 }

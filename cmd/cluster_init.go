@@ -49,7 +49,7 @@ func initCluster(cmd *cobra.Command, args []string) {
 }
 
 func buildURL() string {
-	url := viper.GetString("server") + clusterInitURL
+	url := fmt.Sprintf("%s/v1/public", viper.GetString("server"))
 	if len(initContext) > 0 {
 		url += "?context=" + initContext
 	}

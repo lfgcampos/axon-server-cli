@@ -65,13 +65,13 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 		log.Fatal("Cannot specify a context when also using 'no-context' option.")
 	}
 
-	log.Println("calling: " + viper.GetString("server") + clusterRegisterNodeURL)
+	url := fmt.Sprintf("%s/v1/cluster", viper.GetString("server"))
+	log.Printf("calling: %s\n", url)
 
-	registerClusterNodeURL := fmt.Sprintf("%s%s", viper.GetString("server"), clusterRegisterNodeURL)
 	clusterNodeJSON := buildClusterNodeJSON()
-	log.Printf("calling: %s\n", registerClusterNodeURL)
+	log.Printf("calling: %s\n", url)
 
-	responseBody := httpwrapper.POST(registerClusterNodeURL, clusterNodeJSON)
+	responseBody := httpwrapper.POST(url, clusterNodeJSON)
 	fmt.Printf("%s\n", responseBody)
 }
 
@@ -82,10 +82,10 @@ func buildClusterNodeJSON() []byte {
 		Context:          contextToRegister,
 		NoContexts:       noContext,
 	}
-	clusterNodeJson, err := json.Marshal(&clusterNode)
+	clusterNodeJSON, err := json.Marshal(&clusterNode)
 	if err != nil {
 		log.Fatal("Error building the clusterNode json. ", err)
 	}
-	fmt.Printf("clusterNodeJson: %+v\n", string(clusterNodeJson))
-	return clusterNodeJson
+	fmt.Printf("clusterNodeJson: %+v\n", string(clusterNodeJSON))
+	return clusterNodeJSON
 }

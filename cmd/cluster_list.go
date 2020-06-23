@@ -37,7 +37,7 @@ func init() {
 }
 
 func listClusters(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf("%s%s", viper.GetString("server"), clusterListURL)
+	url := fmt.Sprintf("%s/v1/public", viper.GetString("server"))
 	log.Printf("calling: %s\n", url)
 	
 	responseBody := httpwrapper.GET(url)
