@@ -1,5 +1,11 @@
 # Axon Server Command line interface
 
+[![Release](https://img.shields.io/github/release/lfgcampos/axon-server-cli.svg?style=flat-square)](https://github.com/lfgcampos/axon-server-cli/releases/latest)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/lfgcampos/axon-server-cli)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lfgcampos/axon-server-cli?style=flat-square)](https://goreportcard.com/report/github.com/lfgcampos/axon-server-cli)
+[![Powered By: GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg?style=flat-square)](https://github.com/goreleaser)
+
 The intention of this repo is to have a similar cli as in [axon-server-cli](https://github.com/AxonIQ/axon-server-se/tree/master/axonserver-cli) but written in go instead of java.
 This is more of a learning exercise of go language but should be as much usable as the official cli.
 

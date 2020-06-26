@@ -3,6 +3,8 @@ build:
     - windows
     - darwin
     - linux
+  ldflags:
+    - -s -w -X axon-server-cli/cmd.version={{.Version}} -X axon-server-cli/cmd.commit={{.Commit}} -X axon-server-cli/cmd.date={{.Date}}
 archives:
   - format_overrides:
       - goos: windows
