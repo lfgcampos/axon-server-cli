@@ -54,8 +54,6 @@ func init() {
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
 	rootCmd.PersistentFlags().StringVarP(&token, "access-token", "t", "", "[Optional] Access token to authenticate at server")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
-
-	rootCmd.Version = "1.0"
 }
 
 // initConfig reads in config file and ENV variables if set.
