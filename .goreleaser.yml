@@ -1,0 +1,9 @@
+build:
+  goos:
+    - windows
+    - darwin
+    - linux
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip

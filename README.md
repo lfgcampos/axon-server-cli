@@ -123,3 +123,9 @@ Global Flags:
   -S, --server string   URL of AxonServer (default "http://localhost:8024")
   -t, --token string    Authentication Token
 ```
+
+## Release process
+
+Release is automatic triggered by a git `tag` using [goreleaser](https://goreleaser.com).
+For do that, you have to create a new tag using `git tag -a vx.y.z -m "my release message"`
+and push it to the repo using `git push origin master --tags`.
