@@ -25,9 +25,10 @@ import (
 
 var (
 	// used for flags
-	cfgFile string
-	server  string
-	token   string
+	cfgFile  string
+	server   string
+	token    string
+	jsonFlag bool
 
 	rootCmd = &cobra.Command{
 		Use:   "axon-server-cli",
@@ -50,6 +51,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is axonserver-cli.yaml)")
 
+	rootCmd.PersistentFlags().BoolVarP(&jsonFlag, "json", "", false, "If enabled, all outputs will be json formatted")
+	viper.BindPFlag("json", rootCmd.PersistentFlags().Lookup("json"))
 	rootCmd.PersistentFlags().StringVarP(&server, "server", "S", "http://localhost:8024", "Server to send command to")
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
 	rootCmd.PersistentFlags().StringVarP(&token, "access-token", "t", "", "[Optional] Access token to authenticate at server")
