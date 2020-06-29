@@ -30,8 +30,8 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 * [x] contexts
 * [x] register-context
 * [x] delete-context
-* [ ] add-node-to-context
-* [ ] delete-node-from-context
+* [x] add-node-to-context
+* [x] delete-node-from-context
 
 The option `-S` with the url to the Axon Server is optional, if it is omitted it defaults to [http://localhost:8024](http://localhost:8024/).
 
