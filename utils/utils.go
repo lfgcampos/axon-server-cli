@@ -3,11 +3,12 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/viper"
 	"log"
 )
 
-func Print(any interface{}, json bool) {
-	if json {
+func Print(any interface{}) {
+	if viper.GetBool("json") {
 		PrintAsPrettyJson(any)
 	} else {
 		PrintAsJson(any)

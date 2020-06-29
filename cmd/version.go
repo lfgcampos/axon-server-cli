@@ -33,5 +33,5 @@ func printVersion(cmd *cobra.Command, args []string) {
 		Commit:  commit,
 		Date:    date,
 	}
-	utils.Print(info, jsonFlag)
+	utils.Print(info)
 }

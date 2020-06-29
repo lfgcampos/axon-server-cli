@@ -23,19 +23,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	// used for flags
-	cfgFile  string
-	server   string
-	token    string
-	jsonFlag bool
-
-	rootCmd = &cobra.Command{
-		Use:   "axon-server-cli",
-		Short: "AxonServer-CLI in GO",
-		Long:  `This CLI is used to perform actions on AxonServer`,
-	}
-)
+var rootCmd = &cobra.Command{
+	Use:   "axon-server-cli",
+	Short: "AxonServer-CLI in GO",
+	Long:  `This CLI is used to perform actions on AxonServer`,
+}
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -49,21 +41,21 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is axonserver-cli.yaml)")
-
-	rootCmd.PersistentFlags().BoolVarP(&jsonFlag, "json", "", false, "If enabled, all outputs will be json formatted")
-	viper.BindPFlag("json", rootCmd.PersistentFlags().Lookup("json"))
-	rootCmd.PersistentFlags().StringVarP(&server, "server", "S", "http://localhost:8024", "Server to send command to")
+	rootCmd.PersistentFlags().StringP("config", "c", "axonserver-cli", "config file (default is axonserver-cli.yaml)")
+	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	rootCmd.PersistentFlags().StringP("server", "S", "http://localhost:8024", "Server to send command to")
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
-	rootCmd.PersistentFlags().StringVarP(&token, "access-token", "t", "", "[Optional] Access token to authenticate at server")
+	rootCmd.PersistentFlags().StringP("access-token", "t", "", "[Optional] Access token to authenticate at server")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
+	rootCmd.PersistentFlags().BoolP("json", "j", false, "If enabled, all outputs will be json formatted")
+	viper.BindPFlag("json", rootCmd.PersistentFlags().Lookup("json"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
+	if viper.IsSet("config") {
 		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+		viper.SetConfigFile(viper.GetString("config"))
 	} else {
 		// Search config in current directory with name "axonserver-cli" (without extension).
 		viper.AddConfigPath(".")
