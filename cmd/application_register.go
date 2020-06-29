@@ -29,6 +29,7 @@ import (
 type application struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	Token       string `json:"token"`
 	Roles       []role `json:"roles"`
 }
 
@@ -36,9 +37,6 @@ type role struct {
 	Context string   `json:"context"`
 	Roles   []string `json:"roles"`
 }
-
-var applicationName, applicationDescription string
-var applicationRoles []string
 
 var applicationRegisterCmd = &cobra.Command{
 	Use:     "register",
@@ -52,28 +50,39 @@ var applicationRegisterCmd = &cobra.Command{
 func init() {
 	applicationCmd.AddCommand(applicationRegisterCmd)
 
-	applicationRegisterCmd.Flags().StringVarP(&applicationName, "name", "a", "", "*Name of the application")
-	applicationRegisterCmd.Flags().StringVarP(&applicationDescription, "description", "d", "", "[Optional] Description of the application")
-	applicationRegisterCmd.Flags().StringSliceVarP(&applicationRoles, "roles", "r", []string{}, "Roles for the application, use role@context")
+	applicationRegisterCmd.Flags().StringP("name", "a", "", "*Name of the application")
+	applicationRegisterCmd.Flags().StringP("description", "d", "", "[Optional] Description of the application")
+	applicationRegisterCmd.Flags().StringSliceP("roles", "r", []string{}, "Roles for the application, use role@context")
+	applicationRegisterCmd.Flags().StringP("token", "T", "", "[Optional] Use this token for the app")
 	// required flags
 	applicationRegisterCmd.MarkFlagRequired("name")
 }
 
 func registerApplication(cmd *cobra.Command, args []string) {
+	name, _ := cmd.Flags().GetString("name")
+	description, _ := cmd.Flags().GetString("description")
+	token, _ := cmd.Flags().GetString("token")
+	roles, _ := cmd.Flags().GetStringArray("roles")
+
+	// TODO: where is the best place for validations?
+	if len(token) > 0 && len(token) < 16 {
+		log.Fatal("Token must be at least 16 characters")
+	}
+
 	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
-	postBody := buildApplicationJSON()
+	postBody := buildApplicationJSON(name, description, token, roles)
 	log.Printf("calling: %s\n", url)
 
 	responseBody := httpwrapper.POST(url, postBody)
 	fmt.Printf("%s\n", responseBody)
 }
 
-func buildApplicationJSON() []byte {
-
+func buildApplicationJSON(name string, description string, token string, roles []string) []byte {
 	application := &application{
-		Name:        applicationName,
-		Description: applicationDescription,
-		Roles:       buildRoles(),
+		Name:        name,
+		Description: description,
+		Token:       token,
+		Roles:       buildRoles(roles),
 	}
 	applicationJSON, err := json.Marshal(&application)
 	if err != nil {
@@ -88,11 +97,10 @@ func buildApplicationJSON() []byte {
 	return applicationJSON
 }
 
-func buildRoles() []role {
+func buildRoles(roles []string) []role {
 	var rolesPerContext = make(map[string][]string)
-	for _, roleAndContext := range applicationRoles {
+	for _, roleAndContext := range roles {
 		role, context := splitRoleAndContext(roleAndContext)
-
 		rolesPerContext[context] = append(rolesPerContext[context], role)
 	}
 
