@@ -17,10 +17,8 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
-	"encoding/json"
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -50,18 +48,20 @@ func init() {
 
 	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "*Username")
 	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "[Optional] Password for the user")
-	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "[Optional] roles for the user")
+	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "[Optional] Roles for the user")
 	// required flags
 	userRegisterCmd.MarkFlagRequired("username")
 }
 
 func registerUser(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/users", viper.GetString("server"))
+	utils.Print(url)
+
 	userJSON := buildUserJSON()
-	log.Printf("calling: %s\n", url)
+	utils.Print(userJSON)
 
 	responseBody := httpwrapper.POST(url, userJSON)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildUserJSON() []byte {
@@ -70,10 +70,5 @@ func buildUserJSON() []byte {
 		Password: password,
 		Roles:    roles,
 	}
-	userJSON, err := json.Marshal(&user)
-	if err != nil {
-		log.Fatal("Error building the user json. ", err)
-	}
-	fmt.Printf("userJson: %+v\n", string(userJSON))
-	return userJSON
+	return utils.ToJSON(user)
 }

@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/utils"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -41,14 +42,14 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringP("config", "c", "axonserver-cli", "config file (default is axonserver-cli.yaml)")
+	rootCmd.PersistentFlags().StringP("config", "c", "axonserver-cli", "[Optional] Config file")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().StringP("server", "S", "http://localhost:8024", "Server to send command to")
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
 	rootCmd.PersistentFlags().StringP("access-token", "t", "", "[Optional] Access token to authenticate at server")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
-	rootCmd.PersistentFlags().BoolP("json", "j", false, "If enabled, all outputs will be json formatted")
-	viper.BindPFlag("json", rootCmd.PersistentFlags().Lookup("json"))
+	rootCmd.PersistentFlags().Bool("pretty-json", false, "If enabled, all outputs will be pretty-json formatted")
+	viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -66,8 +67,8 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		utils.Print("Using config file: " + viper.ConfigFileUsed())
 	} else {
-		fmt.Println("Failed to load config file:", err)
+		utils.Print(err.Error())
 	}
 }

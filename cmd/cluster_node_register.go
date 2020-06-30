@@ -17,7 +17,7 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
-	"encoding/json"
+	"axon-server-cli/utils"
 	"fmt"
 	"log"
 
@@ -66,13 +66,13 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 	}
 
 	url := fmt.Sprintf("%s/v1/cluster", viper.GetString("server"))
-	log.Printf("calling: %s\n", url)
+	utils.Print(url)
 
 	clusterNodeJSON := buildClusterNodeJSON()
-	log.Printf("calling: %s\n", url)
+	utils.Print(clusterNodeJSON)
 
 	responseBody := httpwrapper.POST(url, clusterNodeJSON)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildClusterNodeJSON() []byte {
@@ -82,10 +82,5 @@ func buildClusterNodeJSON() []byte {
 		Context:          contextToRegister,
 		NoContexts:       noContext,
 	}
-	clusterNodeJSON, err := json.Marshal(&clusterNode)
-	if err != nil {
-		log.Fatal("Error building the clusterNode json. ", err)
-	}
-	fmt.Printf("clusterNodeJson: %+v\n", string(clusterNodeJSON))
-	return clusterNodeJSON
+	return utils.ToJSON(clusterNode)
 }

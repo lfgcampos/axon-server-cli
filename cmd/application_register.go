@@ -17,7 +17,7 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
-	"encoding/json"
+	"axon-server-cli/utils"
 	"fmt"
 	"log"
 	"strings"
@@ -70,11 +70,13 @@ func registerApplication(cmd *cobra.Command, args []string) {
 	}
 
 	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
+	utils.Print(url)
+
 	postBody := buildApplicationJSON(name, description, token, roles)
-	log.Printf("calling: %s\n", url)
+	utils.Print(postBody)
 
 	responseBody := httpwrapper.POST(url, postBody)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildApplicationJSON(name string, description string, token string, roles []string) []byte {
@@ -84,17 +86,7 @@ func buildApplicationJSON(name string, description string, token string, roles [
 		Token:       token,
 		Roles:       buildRoles(roles),
 	}
-	applicationJSON, err := json.Marshal(&application)
-	if err != nil {
-		log.Fatal("Error building the application json. ", err)
-	}
-	prettyJSON, err := json.MarshalIndent(application, "", "  ")
-	if err != nil {
-		log.Fatal("Failed to generate json", err)
-	}
-	fmt.Printf("applicationJson:\n%s\n", string(prettyJSON))
-	fmt.Println("applicationJson:")
-	return applicationJSON
+	return utils.ToJSON(application)
 }
 
 func buildRoles(roles []string) []role {

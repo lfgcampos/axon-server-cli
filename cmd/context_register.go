@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"encoding/json"
+	"axon-server-cli/utils"
 	"fmt"
 	"log"
 
@@ -72,11 +72,13 @@ func init() {
 
 func createContext(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/context", viper.GetString("server"))
+	utils.Print(url)
+
 	contextJSON := buildContextJSON()
-	log.Printf("calling: %s\n", url)
+	utils.Print(contextJSON)
 
 	responseBody := httpwrapper.POST(url, contextJSON)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildContextJSON() []byte {
@@ -93,12 +95,7 @@ func buildContextJSON() []byte {
 		Nodes:   definedNodes,
 		Roles:   nodesAndRoles,
 	}
-	contextNodeJSON, err := json.Marshal(&contextNode)
-	if err != nil {
-		log.Fatal("Error building the contextNode json. ", err)
-	}
-	fmt.Printf("contextNodeJson: %+v\n", string(contextNodeJSON))
-	return contextNodeJSON
+	return utils.ToJSON(contextNode)
 }
 
 func addNodes(definedNodes []string, nodesAndRoles []nodeAndRole, nodes []string, role string) ([]string, []nodeAndRole) {
