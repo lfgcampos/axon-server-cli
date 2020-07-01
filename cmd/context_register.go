@@ -78,7 +78,10 @@ func createContext(cmd *cobra.Command, args []string) {
 	contextJSON := buildContextJSON(contextName, nodeNames, activeBackup, passiveBackup, messagingOnly)
 	utils.Print(contextJSON)
 
-	responseBody := httpwrapper.POST(url, contextJSON)
+	responseBody, err := httpwrapper.POST(url, contextJSON)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }
 

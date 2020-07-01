@@ -20,7 +20,6 @@ package httpwrapper
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -36,34 +35,33 @@ func init() {
 }
 
 // GET - Executes a GET on the given URL.
-func GET(url string) []byte {
+func GET(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal("Error reading request ", err)
+		return nil, err
 	}
-
 	req.Header.Set("AxonIQ-Access-Token", token)
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Error reading response. ", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading response body. ", err)
+		return nil, err
 	}
 
-	return responseBody
+	return responseBody, nil
 }
 
 // POST - Executes POST on the given URL, with the given body
-func POST(url string, requestBody []byte) []byte {
+func POST(url string, requestBody []byte) ([]byte, error) {
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
 	if err != nil {
-		log.Fatal("Error reading request.", err)
+		return nil, err
 	}
 
 	req.Header.Set("AxonIQ-Access-Token", token)
@@ -72,23 +70,23 @@ func POST(url string, requestBody []byte) []byte {
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Error reading response. ", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading response body. ", err)
+		return nil, err
 	}
 
-	return responseBody
+	return responseBody, nil
 }
 
 // DELETE - Executes DELETE on the given URL, with the given body.
-func DELETE(url string) []byte {
+func DELETE(url string) ([]byte, error) {
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		log.Fatal("Error reading the request. ", err)
+		return nil, err
 	}
 
 	req.Header.Set("AxonIQ-Access-Token", token)
@@ -97,14 +95,14 @@ func DELETE(url string) []byte {
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Error reading response. ", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading response body. ", err)
+		return nil, err
 	}
 
-	return responseBody
+	return responseBody, nil
 }

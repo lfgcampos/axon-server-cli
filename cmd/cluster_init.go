@@ -19,6 +19,8 @@ import (
 	"axon-server-cli/httpwrapper"
 	"axon-server-cli/utils"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -41,7 +43,10 @@ func initCluster(cmd *cobra.Command, args []string) {
 	url := buildContextURL(context)
 	utils.Print(url)
 
-	responseBody := httpwrapper.POST(url, nil)
+	responseBody, err := httpwrapper.POST(url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }
 

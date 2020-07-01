@@ -19,6 +19,8 @@ import (
 	"axon-server-cli/httpwrapper"
 	"axon-server-cli/utils"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -44,6 +46,9 @@ func unregisterNodeToCluster(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/cluster/%s", viper.GetString("server"), node)
 	utils.Print(url)
 
-	responseBody := httpwrapper.DELETE(url)
+	responseBody, err := httpwrapper.DELETE(url)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }

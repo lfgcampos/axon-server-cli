@@ -18,6 +18,8 @@ package cmd
 import (
 	"axon-server-cli/utils"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -40,6 +42,9 @@ func listContexts(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/public/context", viper.GetString("server"))
 	utils.Print(url)
 
-	responseBody := httpwrapper.GET(url)
+	responseBody, err := httpwrapper.GET(url)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }
