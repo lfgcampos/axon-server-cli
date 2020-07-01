@@ -17,9 +17,8 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -49,10 +48,10 @@ func deleteNodeFromContext(cmd *cobra.Command, args []string) {
 	preserveEventStore, _ := cmd.Flags().GetBool("preserve-event-store")
 
 	url := buildContextNodeDeleteURL(contextName, nodeName, preserveEventStore)
-	log.Printf("calling: %s\n", url)
+	utils.Print(url)
 
 	responseBody := httpwrapper.DELETE(url)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildContextNodeDeleteURL(contextName string, nodeName string, preserveEventStore bool) string {

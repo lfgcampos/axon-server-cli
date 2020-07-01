@@ -17,9 +17,8 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -38,9 +37,8 @@ func init() {
 
 func listClusters(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/public", viper.GetString("server"))
-	log.Printf("calling: %s\n", url)
-	
+	utils.Print(url)
+
 	responseBody := httpwrapper.GET(url)
-	
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }

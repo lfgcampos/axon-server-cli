@@ -17,9 +17,8 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -49,10 +48,10 @@ func addNodeToContext(cmd *cobra.Command, args []string) {
 	nodeRole, _ := cmd.Flags().GetString("role")
 
 	url := buildContextNodeAddURL(contextName, nodeName, nodeRole)
-	log.Printf("calling: %s\n", url)
+	utils.Print(url)
 
 	responseBody := httpwrapper.POST(url, nil)
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
 
 func buildContextNodeAddURL(contextName string, nodeName string, nodeRole string) string {

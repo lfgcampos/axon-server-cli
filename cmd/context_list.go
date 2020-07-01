@@ -16,9 +16,8 @@ limitations under the License.
 package cmd
 
 import (
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -39,8 +38,8 @@ func init() {
 
 func listContexts(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/public/context", viper.GetString("server"))
+	utils.Print(url)
 
-	log.Printf("calling: %s\n", url)
-	body := httpwrapper.GET(url)
-	fmt.Printf("%s\n", body)
+	responseBody := httpwrapper.GET(url)
+	utils.Print(responseBody)
 }

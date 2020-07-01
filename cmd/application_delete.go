@@ -17,9 +17,8 @@ package cmd
 
 import (
 	"axon-server-cli/httpwrapper"
+	"axon-server-cli/utils"
 	"fmt"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -44,9 +43,8 @@ func deleteApplication(cmd *cobra.Command, args []string) {
 	applicationName, _ := cmd.Flags().GetString("application")
 
 	url := fmt.Sprintf("%s/v1/applications/%s", viper.GetString("server"), applicationName)
-	log.Printf("calling: %s\n", url)
+	utils.Print(url)
 
 	responseBody := httpwrapper.DELETE(url)
-
-	fmt.Printf("%s\n", responseBody)
+	utils.Print(responseBody)
 }
