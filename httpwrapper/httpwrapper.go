@@ -36,11 +36,11 @@ func init() {
 
 // GET - Executes a GET on the given URL.
 func GET(url string) ([]byte, error) {
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("AxonIQ-Access-Token", token)
+	req.Header.Set(tokenKey, token)
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -59,12 +59,12 @@ func GET(url string) ([]byte, error) {
 
 // POST - Executes POST on the given URL, with the given body
 func POST(url string, requestBody []byte) ([]byte, error) {
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(requestBody))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("AxonIQ-Access-Token", token)
+	req.Header.Set(tokenKey, token)
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{Timeout: time.Second * 10}
@@ -82,16 +82,15 @@ func POST(url string, requestBody []byte) ([]byte, error) {
 	return responseBody, nil
 }
 
-// DELETE - Executes DELETE on the given URL, with the given body.
+// DELETE - Executes DELETE on the given URL
 func DELETE(url string) ([]byte, error) {
-	req, err := http.NewRequest("DELETE", url, nil)
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Set("AxonIQ-Access-Token", token)
-	req.Header.Set("Content-Type", "application/json")
-	
+	req.Header.Set(tokenKey, token)
+
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
 	if err != nil {
