@@ -34,11 +34,6 @@ const (
 	roleMessagingOnly = "MESSAGING_ONLY"
 )
 
-var (
-	contextRegister                                   string
-	nodes, activeBackup, passiveBackup, messagingOnly []string
-)
-
 type nodeAndRole struct {
 	Node string `json:"node"`
 	Role string `json:"role"`
@@ -61,11 +56,11 @@ var contextRegisterCmd = &cobra.Command{
 func init() {
 	contextCmd.AddCommand(contextRegisterCmd)
 
-	contextRegisterCmd.Flags().StringVarP(&contextRegister, "context", "c", "", "*Name of the context")
-	contextRegisterCmd.Flags().StringSliceVarP(&nodes, "nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for context")
-	contextRegisterCmd.Flags().StringSliceVarP(&activeBackup, "activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
-	contextRegisterCmd.Flags().StringSliceVarP(&passiveBackup, "passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")
-	contextRegisterCmd.Flags().StringSliceVarP(&messagingOnly, "messagingOnly", "m", []string{}, "[Optional - Enterprise Edition only] messaging-only member nodes for context")
+	contextRegisterCmd.Flags().StringP("context", "c", "", "*Name of the context")
+	contextRegisterCmd.Flags().StringSliceP("nodes", "n", []string{}, "[Enterprise Edition only] primary member nodes for context")
+	contextRegisterCmd.Flags().StringSliceP("activeBackup", "a", []string{}, "[Optional - Enterprise Edition only] active backup member nodes for context")
+	contextRegisterCmd.Flags().StringSliceP("passiveBackup", "p", []string{}, "[Optional - Enterprise Edition only] passive backup member nodes for context")
+	contextRegisterCmd.Flags().StringSliceP("messagingOnly", "m", []string{}, "[Optional - Enterprise Edition only] messaging-only member nodes for context")
 	// required flags
 	contextRegisterCmd.MarkFlagRequired("context")
 }
@@ -74,24 +69,30 @@ func createContext(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/context", viper.GetString("server"))
 	utils.Print(url)
 
-	contextJSON := buildContextJSON()
+	contextName, _ := cmd.Flags().GetString("context")
+	nodeNames, _ := cmd.Flags().GetStringSlice("nodes")	
+	activeBackup, _ := cmd.Flags().GetStringSlice("activeBackup")
+	passiveBackup, _ := cmd.Flags().GetStringSlice("passiveBackup")
+	messagingOnly, _ := cmd.Flags().GetStringSlice("messagingOnly")	
+
+	contextJSON := buildContextJSON(contextName, nodeNames, activeBackup, passiveBackup, messagingOnly)
 	utils.Print(contextJSON)
 
 	responseBody := httpwrapper.POST(url, contextJSON)
 	utils.Print(responseBody)
 }
 
-func buildContextJSON() []byte {
+func buildContextJSON(contextName string, nodeNames []string, activeBackup []string, passiveBackup []string, messagingOnly []string) []byte {
 	var nodesAndRoles []nodeAndRole
 	var definedNodes []string
 	// build nodes and nodesAndRoles
-	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, nodes, rolePrimary)
+	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, nodeNames, rolePrimary)
 	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, activeBackup, roleActiveBackup)
 	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, passiveBackup, rolePassiveBackup)
 	definedNodes, nodesAndRoles = addNodes(definedNodes, nodesAndRoles, messagingOnly, roleMessagingOnly)
 
 	contextNode := &contextNode{
-		Context: contextRegister,
+		Context: contextName,
 		Nodes:   definedNodes,
 		Roles:   nodesAndRoles,
 	}

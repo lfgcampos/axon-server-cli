@@ -23,11 +23,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	usernameRegister, password string
-	roles                      []string
-)
-
 type user struct {
 	Username string   `json:"userName"`
 	Password string   `json:"password"`
@@ -46,9 +41,9 @@ If you do not specify a password with the -p option, the command line interface 
 func init() {
 	userCmd.AddCommand(userRegisterCmd)
 
-	userRegisterCmd.Flags().StringVarP(&usernameRegister, "username", "u", "", "*Username")
-	userRegisterCmd.Flags().StringVarP(&password, "password", "p", "", "[Optional] Password for the user")
-	userRegisterCmd.Flags().StringSliceVarP(&roles, "roles", "r", []string{}, "[Optional] Roles for the user")
+	userRegisterCmd.Flags().StringP("username", "u", "", "*Username")
+	userRegisterCmd.Flags().StringP("password", "p", "", "[Optional] Password for the user")
+	userRegisterCmd.Flags().StringSliceP("roles", "r", []string{}, "[Optional] Roles for the user")
 	// required flags
 	userRegisterCmd.MarkFlagRequired("username")
 }
@@ -57,18 +52,18 @@ func registerUser(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/users", viper.GetString("server"))
 	utils.Print(url)
 
-	userJSON := buildUserJSON()
+	username, _ := cmd.Flags().GetString("username")
+	password, _ := cmd.Flags().GetString("password")
+	roles, _ := cmd.Flags().GetStringSlice("roles")
+	
+	user := &user{
+		Username: username,
+		Password: password,
+		Roles:    roles,
+	}
+	userJSON := utils.ToJSON(user)
 	utils.Print(userJSON)
 
 	responseBody := httpwrapper.POST(url, userJSON)
 	utils.Print(responseBody)
-}
-
-func buildUserJSON() []byte {
-	user := &user{
-		Username: usernameRegister,
-		Password: password,
-		Roles:    roles,
-	}
-	return utils.ToJSON(user)
 }

@@ -23,10 +23,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	nodename string
-)
-
 var clusterUnregisterNodeCmd = &cobra.Command{
 	Use:     "unregister",
 	Aliases: []string{"u"},
@@ -38,13 +34,14 @@ var clusterUnregisterNodeCmd = &cobra.Command{
 func init() {
 	clusterCmd.AddCommand(clusterUnregisterNodeCmd)
 	// flags
-	clusterUnregisterNodeCmd.Flags().StringVarP(&nodename, "node", "n", "", "*Name of the node")
+	clusterUnregisterNodeCmd.Flags().StringP("node", "n", "", "*Name of the node")
 	// required flags
 	clusterUnregisterNodeCmd.MarkFlagRequired("node")
 }
 
 func unregisterNodeToCluster(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf("%s/v1/cluster/%s", viper.GetString("server"), nodename)
+	node, _ := cmd.Flags().GetString("node")
+	url := fmt.Sprintf("%s/v1/cluster/%s", viper.GetString("server"), node)
 	utils.Print(url)
 
 	responseBody := httpwrapper.DELETE(url)
