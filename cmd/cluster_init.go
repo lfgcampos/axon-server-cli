@@ -23,10 +23,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	initContext string
-)
-
 var clusterInitCmd = &cobra.Command{
 	Use:     "init",
 	Aliases: []string{"l"},
@@ -37,21 +33,22 @@ var clusterInitCmd = &cobra.Command{
 
 func init() {
 	clusterCmd.AddCommand(clusterInitCmd)
-	clusterInitCmd.Flags().StringVarP(&initContext, "context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
+	clusterInitCmd.Flags().StringP("context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
 }
 
 func initCluster(cmd *cobra.Command, args []string) {
-	url := buildURL()
+	context, _ := cmd.Flags().GetString("context")
+	url := buildContextURL(context)
 	utils.Print(url)
 
 	responseBody := httpwrapper.POST(url, nil)
 	utils.Print(responseBody)
 }
 
-func buildURL() string {
+func buildContextURL(context string) string {
 	url := fmt.Sprintf("%s/v1/public", viper.GetString("server"))
-	if len(initContext) > 0 {
-		url += "?context=" + initContext
+	if len(context) > 0 {
+		url += "?context=" + context
 	}
 	return url
 }

@@ -23,10 +23,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	usernameDelete string
-)
-
 // userDeleteCmd represents the deleteUser command
 var userDeleteCmd = &cobra.Command{
 	Use:     "delete",
@@ -38,13 +34,14 @@ var userDeleteCmd = &cobra.Command{
 
 func init() {
 	userCmd.AddCommand(userDeleteCmd)
-	userDeleteCmd.Flags().StringVarP(&usernameDelete, "username", "u", "", "*user username")
+	userDeleteCmd.Flags().StringP("username", "u", "", "*user username")
 	// required flags
 	userDeleteCmd.MarkFlagRequired("username")
 }
 
 func deleteUser(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf("%s/v1/users/%s", viper.GetString("server"), usernameDelete)
+	username, _ := cmd.Flags().GetString("username")
+	url := fmt.Sprintf("%s/v1/users/%s", viper.GetString("server"), username)
 	utils.Print(url)
 
 	responseBody := httpwrapper.DELETE(url)

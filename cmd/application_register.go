@@ -72,21 +72,17 @@ func registerApplication(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
 	utils.Print(url)
 
-	postBody := buildApplicationJSON(name, description, token, roles)
-	utils.Print(postBody)
-
-	responseBody := httpwrapper.POST(url, postBody)
-	utils.Print(responseBody)
-}
-
-func buildApplicationJSON(name string, description string, token string, roles []string) []byte {
 	application := &application{
 		Name:        name,
 		Description: description,
 		Token:       token,
 		Roles:       buildRoles(roles),
 	}
-	return utils.ToJSON(application)
+	postBody := utils.ToJSON(application)
+	utils.Print(postBody)
+
+	responseBody := httpwrapper.POST(url, postBody)
+	utils.Print(responseBody)
 }
 
 func buildRoles(roles []string) []role {

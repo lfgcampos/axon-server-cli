@@ -23,10 +23,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	contextDelete string
-)
-
 // contextDeleteCmd represents the contextDelete command
 var contextDeleteCmd = &cobra.Command{
 	Use:     "delete",
@@ -38,13 +34,14 @@ var contextDeleteCmd = &cobra.Command{
 
 func init() {
 	contextCmd.AddCommand(contextDeleteCmd)
-	contextDeleteCmd.Flags().StringVarP(&contextDelete, "context", "c", "", "*Name of the context")
+	contextDeleteCmd.Flags().StringP("context", "c", "", "*Name of the context")
 	// required flags
 	contextDeleteCmd.MarkFlagRequired("context")
 }
 
 func deleteContext(cmd *cobra.Command, args []string) {
-	url := fmt.Sprintf("%s/v1/context/%s", viper.GetString("server"), contextDelete)
+	context, _ := cmd.Flags().GetString("context")
+	url := fmt.Sprintf("%s/v1/context/%s", viper.GetString("server"), context)
 	utils.Print(url)
 
 	responseBody := httpwrapper.DELETE(url)

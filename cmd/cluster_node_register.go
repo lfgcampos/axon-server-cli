@@ -25,13 +25,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	internalHost      string
-	internalPort      string
-	contextToRegister string
-	noContext         bool
-)
-
 type clusterNode struct {
 	InternalHostName string `json:"internalHostName"`
 	InternalGrpcPort string `json:"internalGrpcPort"`
@@ -51,36 +44,38 @@ var clusterRegisterNodeCmd = &cobra.Command{
 func init() {
 	clusterCmd.AddCommand(clusterRegisterNodeCmd)
 	// flags
-	clusterRegisterNodeCmd.Flags().StringVarP(&internalHost, "internal-host", "i", "", "*Internal hostname of the node")
-	clusterRegisterNodeCmd.Flags().StringVarP(&internalPort, "internal-port", "p", "8224", "Internal port of the node")
-	clusterRegisterNodeCmd.Flags().StringVarP(&contextToRegister, "context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
-	clusterRegisterNodeCmd.Flags().BoolVarP(&noContext, "no-contexts", "", false, "[Optional - Enterprise Edition only] add node to cluster, but don't register it in any contexts")
+	clusterRegisterNodeCmd.Flags().StringP("internal-host", "i", "", "*Internal hostname of the node")
+	clusterRegisterNodeCmd.Flags().StringP("internal-port", "p", "8224", "Internal port of the node")
+	clusterRegisterNodeCmd.Flags().StringP("context", "c", "", "[Optional - Enterprise Edition only] context to register node in")
+	clusterRegisterNodeCmd.Flags().BoolP("no-contexts", "", false, "[Optional - Enterprise Edition only] add node to cluster, but don't register it in any contexts")
 	// required flags
 	clusterRegisterNodeCmd.MarkFlagRequired("internal-host")
 }
 
 func registerNodeToCluster(cmd *cobra.Command, args []string) {
 
-	if len(contextToRegister) > 0 && noContext {
+	context, _ := cmd.Flags().GetString("context")
+	noContexts, _ := cmd.Flags().GetBool("no-contexts")
+
+	if len(context) > 0 && noContexts {
 		log.Fatal("Cannot specify a context when also using 'no-context' option.")
 	}
 
 	url := fmt.Sprintf("%s/v1/cluster", viper.GetString("server"))
 	utils.Print(url)
 
-	clusterNodeJSON := buildClusterNodeJSON()
+	internalHost, _ := cmd.Flags().GetString("internal-host")
+	internalPort, _ := cmd.Flags().GetString("internal-port")
+
+	clusterNode := &clusterNode{
+		InternalHostName: internalHost,
+		InternalGrpcPort: internalPort,
+		Context:          context,
+		NoContexts:       noContexts,
+	}
+	clusterNodeJSON := utils.ToJSON(clusterNode)
 	utils.Print(clusterNodeJSON)
 
 	responseBody := httpwrapper.POST(url, clusterNodeJSON)
 	utils.Print(responseBody)
-}
-
-func buildClusterNodeJSON() []byte {
-	clusterNode := &clusterNode{
-		InternalHostName: internalHost,
-		InternalGrpcPort: internalPort,
-		Context:          contextToRegister,
-		NoContexts:       noContext,
-	}
-	return utils.ToJSON(clusterNode)
 }
