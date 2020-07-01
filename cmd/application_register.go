@@ -81,7 +81,10 @@ func registerApplication(cmd *cobra.Command, args []string) {
 	postBody := utils.ToJSON(application)
 	utils.Print(postBody)
 
-	responseBody := httpwrapper.POST(url, postBody)
+	responseBody, err := httpwrapper.POST(url, postBody)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }
 

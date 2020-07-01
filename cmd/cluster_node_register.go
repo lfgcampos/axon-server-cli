@@ -76,6 +76,9 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 	clusterNodeJSON := utils.ToJSON(clusterNode)
 	utils.Print(clusterNodeJSON)
 
-	responseBody := httpwrapper.POST(url, clusterNodeJSON)
+	responseBody, err := httpwrapper.POST(url, clusterNodeJSON)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }

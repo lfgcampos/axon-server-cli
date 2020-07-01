@@ -19,6 +19,8 @@ import (
 	"axon-server-cli/httpwrapper"
 	"axon-server-cli/utils"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -55,7 +57,7 @@ func registerUser(cmd *cobra.Command, args []string) {
 	username, _ := cmd.Flags().GetString("username")
 	password, _ := cmd.Flags().GetString("password")
 	roles, _ := cmd.Flags().GetStringSlice("roles")
-	
+
 	user := &user{
 		Username: username,
 		Password: password,
@@ -64,6 +66,9 @@ func registerUser(cmd *cobra.Command, args []string) {
 	userJSON := utils.ToJSON(user)
 	utils.Print(userJSON)
 
-	responseBody := httpwrapper.POST(url, userJSON)
+	responseBody, err := httpwrapper.POST(url, userJSON)
+	if err != nil {
+		log.Fatal(err)
+	}
 	utils.Print(responseBody)
 }
