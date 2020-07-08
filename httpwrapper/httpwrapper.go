@@ -26,8 +26,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-const tokenKey = "AxonIQ-Access-Token"
-
 var token string
 
 func init() {
@@ -40,7 +38,9 @@ func GET(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set(tokenKey, token)
+	if (len(token) != 0) {
+		req.Header.Set("AxonIQ-Access-Token", token)
+	}
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -64,7 +64,9 @@ func POST(url string, requestBody []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Set(tokenKey, token)
+	if (len(token) != 0) {
+		req.Header.Set("AxonIQ-Access-Token", token)
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{Timeout: time.Second * 10}
@@ -89,7 +91,9 @@ func DELETE(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Set(tokenKey, token)
+	if (len(token) != 0) {
+		req.Header.Set("AxonIQ-Access-Token", token)
+	}
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
