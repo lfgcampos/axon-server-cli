@@ -19,17 +19,25 @@ package httpwrapper
 
 import (
 	"bytes"
+	"fmt"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/spf13/viper"
 )
 
-var token string
+func setAxonIQAccessTokenHeader(req *http.Request) {
+	if viper.IsSet("token") {
+		req.Header.Set("AxonIQ-Access-Token", viper.GetString("token"))
+	}
+}
 
-func init() {
-	token = viper.GetString("token")
+func setContentTypeApplicationJsonHeader(req *http.Request) {
+	req.Header.Set("Content-Type", "application/json")
+}
+
+func is2xxSuccessful(statusCode int) bool {
+	return statusCode >= 200 && statusCode <= 299
 }
 
 // GET - Executes a GET on the given URL.
@@ -38,9 +46,8 @@ func GET(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	if (len(token) != 0) {
-		req.Header.Set("AxonIQ-Access-Token", token)
-	}
+
+	setAxonIQAccessTokenHeader(req)
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -49,6 +56,9 @@ func GET(url string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
+	if !is2xxSuccessful(resp.StatusCode) {
+		fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -64,10 +74,8 @@ func POST(url string, requestBody []byte) ([]byte, error) {
 		return nil, err
 	}
 
-	if (len(token) != 0) {
-		req.Header.Set("AxonIQ-Access-Token", token)
-	}
-	req.Header.Set("Content-Type", "application/json")
+	setAxonIQAccessTokenHeader(req)
+	setContentTypeApplicationJsonHeader(req)
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -76,6 +84,9 @@ func POST(url string, requestBody []byte) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
+	if !is2xxSuccessful(resp.StatusCode) {
+		fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -91,9 +102,7 @@ func DELETE(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	if (len(token) != 0) {
-		req.Header.Set("AxonIQ-Access-Token", token)
-	}
+	setAxonIQAccessTokenHeader(req)
 
 	client := &http.Client{Timeout: time.Second * 10}
 	resp, err := client.Do(req)
@@ -102,6 +111,9 @@ func DELETE(url string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
+	if !is2xxSuccessful(resp.StatusCode) {
+		fmt.Println("HTTP Response Status:", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err

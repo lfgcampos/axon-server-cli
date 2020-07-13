@@ -42,11 +42,11 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringP("config", "c", "axonserver-cli", "[Optional] Config file")
+	rootCmd.PersistentFlags().String("config", "axonserver-cli", "[Optional] Config file")
 	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().StringP("server", "S", "http://localhost:8024", "Server to send command to")
 	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
-	rootCmd.PersistentFlags().StringP("access-token", "t", "", "[Optional] Access token to authenticate at server")
+	rootCmd.PersistentFlags().StringP("token", "t", "", "[Optional] Access token to authenticate at server")
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	rootCmd.PersistentFlags().Bool("pretty-json", false, "If enabled, all outputs will be pretty-json formatted")
 	viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
@@ -69,6 +69,7 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		utils.Print("Using config file: " + viper.ConfigFileUsed())
 	} else {
+		// TODO: only print it when in verbose
 		utils.Print(err.Error())
 	}
 }
