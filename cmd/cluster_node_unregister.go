@@ -44,7 +44,6 @@ func init() {
 func unregisterNodeToCluster(cmd *cobra.Command, args []string) {
 	node, _ := cmd.Flags().GetString("node")
 	url := fmt.Sprintf("%s/v1/cluster/%s", viper.GetString("server"), node)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.DELETE(url)
 	if err != nil {

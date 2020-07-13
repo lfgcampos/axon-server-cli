@@ -50,7 +50,6 @@ func deleteNodeFromContext(cmd *cobra.Command, args []string) {
 	preserveEventStore, _ := cmd.Flags().GetBool("preserve-event-store")
 
 	url := buildContextNodeDeleteURL(contextName, nodeName, preserveEventStore)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.DELETE(url)
 	if err != nil {

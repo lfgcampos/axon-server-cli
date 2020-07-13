@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -43,13 +44,15 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().String("config", "axonserver-cli", "[Optional] Config file")
-	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().StringP("server", "S", "http://localhost:8024", "Server to send command to")
-	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
+	_ = viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
 	rootCmd.PersistentFlags().StringP("token", "t", "", "[Optional] Access token to authenticate at server")
-	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
+	_ = viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	rootCmd.PersistentFlags().Bool("pretty-json", false, "If enabled, all outputs will be pretty-json formatted")
-	viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
+	_ = viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
+	rootCmd.PersistentFlags().Bool("verbose", false, "If enabled, more output is produced")
+	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -59,7 +62,21 @@ func initConfig() {
 		viper.SetConfigFile(viper.GetString("config"))
 	} else {
 		// Search config in current directory with name "axonserver-cli" (without extension).
-		viper.AddConfigPath(".")
+		var axoniqHome = "."
+		val, ok := os.LookupEnv("AXONIQ_HOME")
+		if ok {
+			axoniqHome = val
+		} else {
+			val, ok := os.LookupEnv("USERPROFILE")
+			if !ok {
+				val = os.Getenv("HOME")
+			}
+			axoniqHome = filepath.Join(val, ".axoniq")
+			if stat, err := os.Stat(axoniqHome); os.IsNotExist(err) || !stat.IsDir() {
+				axoniqHome = "."
+			}
+		}
+		viper.AddConfigPath(axoniqHome)
 		viper.SetConfigName("axonserver-cli")
 	}
 
@@ -68,8 +85,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		utils.Print("Using config file: " + viper.ConfigFileUsed())
-	} else {
-		// TODO: only print it when in verbose
+	} else if viper.IsSet("verbose") {
 		utils.Print(err.Error())
 	}
 }

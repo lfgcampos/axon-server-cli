@@ -45,7 +45,6 @@ func deleteApplication(cmd *cobra.Command, args []string) {
 	applicationName, _ := cmd.Flags().GetString("application")
 
 	url := fmt.Sprintf("%s/v1/applications/%s", viper.GetString("server"), applicationName)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.DELETE(url)
 	if err != nil {

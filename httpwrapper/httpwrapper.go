@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -40,8 +41,16 @@ func is2xxSuccessful(statusCode int) bool {
 	return statusCode >= 200 && statusCode <= 299
 }
 
+func printAction(method string, url string) {
+	if viper.IsSet("verbose") {
+		_, _ = fmt.Fprintf(os.Stderr, "HTTP request: method = '%s', url = '%s'\n", method, url)
+	}
+}
+
 // GET - Executes a GET on the given URL.
 func GET(url string) ([]byte, error) {
+	printAction("GET", url)
+
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -69,6 +78,8 @@ func GET(url string) ([]byte, error) {
 
 // POST - Executes POST on the given URL, with the given body
 func POST(url string, requestBody []byte) ([]byte, error) {
+	printAction("POST", url)
+
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
@@ -97,6 +108,8 @@ func POST(url string, requestBody []byte) ([]byte, error) {
 
 // DELETE - Executes DELETE on the given URL
 func DELETE(url string) ([]byte, error) {
+	printAction("DELETE", url)
+
 	req, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		return nil, err

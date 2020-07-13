@@ -50,7 +50,6 @@ func addNodeToContext(cmd *cobra.Command, args []string) {
 	nodeRole, _ := cmd.Flags().GetString("role")
 
 	url := buildContextNodeAddURL(contextName, nodeName, nodeRole)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.POST(url, nil)
 	if err != nil {
