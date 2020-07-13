@@ -43,7 +43,7 @@ func initCluster(cmd *cobra.Command, args []string) {
 	url := buildContextURL(context)
 	utils.Print(url)
 
-	responseBody, err := httpwrapper.GET(url)
+	responseBody, err := httpwrapper.POST(url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +51,7 @@ func initCluster(cmd *cobra.Command, args []string) {
 }
 
 func buildContextURL(context string) string {
-	url := fmt.Sprintf("%s/v1/public", viper.GetString("server"))
+	url := fmt.Sprintf("%s/v1/context/init", viper.GetString("server"))
 	if len(context) > 0 {
 		url += "?context=" + context
 	}
