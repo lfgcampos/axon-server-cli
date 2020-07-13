@@ -43,7 +43,7 @@ func initCluster(cmd *cobra.Command, args []string) {
 	url := buildContextURL(context)
 	utils.Print(url)
 
-	responseBody, err := httpwrapper.POST(url, nil)
+	responseBody, err := httpwrapper.GET(url)
 	if err != nil {
 		log.Fatal(err)
 	}
