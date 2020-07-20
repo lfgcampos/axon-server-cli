@@ -52,7 +52,6 @@ func init() {
 
 func registerUser(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/users", viper.GetString("server"))
-	utils.Print(url)
 
 	username, _ := cmd.Flags().GetString("username")
 	password, _ := cmd.Flags().GetString("password")

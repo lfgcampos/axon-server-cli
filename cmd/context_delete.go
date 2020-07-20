@@ -44,7 +44,6 @@ func init() {
 func deleteContext(cmd *cobra.Command, args []string) {
 	context, _ := cmd.Flags().GetString("context")
 	url := fmt.Sprintf("%s/v1/context/%s", viper.GetString("server"), context)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.DELETE(url)
 	if err != nil {

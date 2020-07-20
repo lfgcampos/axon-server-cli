@@ -67,7 +67,6 @@ func init() {
 
 func createContext(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/context", viper.GetString("server"))
-	utils.Print(url)
 
 	contextName, _ := cmd.Flags().GetString("context")
 	nodeNames, _ := cmd.Flags().GetStringSlice("nodes")	

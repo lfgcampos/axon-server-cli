@@ -62,7 +62,6 @@ func registerNodeToCluster(cmd *cobra.Command, args []string) {
 	}
 
 	url := fmt.Sprintf("%s/v1/cluster", viper.GetString("server"))
-	utils.Print(url)
 
 	internalHost, _ := cmd.Flags().GetString("internal-host")
 	internalPort, _ := cmd.Flags().GetString("internal-port")

@@ -39,7 +39,6 @@ func init() {
 
 func listApplications(cmd *cobra.Command, args []string) {
 	url := fmt.Sprintf("%s/v1/public/applications", viper.GetString("server"))
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.GET(url)
 	if err != nil {

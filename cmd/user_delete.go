@@ -44,7 +44,6 @@ func init() {
 func deleteUser(cmd *cobra.Command, args []string) {
 	username, _ := cmd.Flags().GetString("username")
 	url := fmt.Sprintf("%s/v1/users/%s", viper.GetString("server"), username)
-	utils.Print(url)
 
 	responseBody, err := httpwrapper.DELETE(url)
 	if err != nil {

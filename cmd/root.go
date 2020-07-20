@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
@@ -50,6 +51,8 @@ func init() {
 	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	rootCmd.PersistentFlags().Bool("pretty-json", false, "If enabled, all outputs will be pretty-json formatted")
 	viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
+	rootCmd.PersistentFlags().Bool("verbose", false, "If enabled, more output is produced")
+	viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -59,7 +62,20 @@ func initConfig() {
 		viper.SetConfigFile(viper.GetString("config"))
 	} else {
 		// Search config in current directory with name "axonserver-cli" (without extension).
-		viper.AddConfigPath(".")
+		var defaultDir = "."
+		viper.AddConfigPath(defaultDir)
+		// check AXONIQ_HOME for the config as well
+		if axoniqHome, ok := os.LookupEnv("AXONIQ_HOME"); ok {
+			viper.AddConfigPath(axoniqHome)
+		}
+		// check USERPROFILE or HOME for .axoniq folder with config as well
+		if userprofile, ok := os.LookupEnv("USERPROFILE"); ok {
+			viper.AddConfigPath(filepath.Join(userprofile, ".axoniq"))
+		}
+		if home, ok := os.LookupEnv("HOME"); ok {
+			viper.AddConfigPath(filepath.Join(home, ".axoniq"))
+		}
+		// name of the file
 		viper.SetConfigName("axonserver-cli")
 	}
 
@@ -68,8 +84,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		utils.Print("Using config file: " + viper.ConfigFileUsed())
-	} else {
-		// TODO: only print it when in verbose
+	} else if viper.IsSet("verbose") {
 		utils.Print(err.Error())
 	}
 }

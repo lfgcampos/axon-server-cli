@@ -70,7 +70,6 @@ func registerApplication(cmd *cobra.Command, args []string) {
 	}
 
 	url := fmt.Sprintf("%s/v1/applications", viper.GetString("server"))
-	utils.Print(url)
 
 	application := &application{
 		Name:        name,
