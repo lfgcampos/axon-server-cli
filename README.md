@@ -25,6 +25,7 @@ For the [Axon Server Standard edition](https://axoniq.io/product-overview/axon-s
 * [x] delete-application
 * [x] init-cluster
 * [x] cluster
+* [ ] update-license
 * [x] register-node
 * [x] unregister-node
 * [x] contexts
