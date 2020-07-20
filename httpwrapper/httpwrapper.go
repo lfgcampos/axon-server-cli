@@ -43,7 +43,7 @@ func is2xxSuccessful(statusCode int) bool {
 
 func printAction(method string, url string) {
 	if viper.IsSet("verbose") {
-		_, _ = fmt.Fprintf(os.Stderr, "HTTP request: method = '%s', url = '%s'\n", method, url)
+		fmt.Fprintf(os.Stderr, "HTTP request: method = '%s', url = '%s'\n", method, url)
 	}
 }
 

@@ -44,15 +44,15 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().String("config", "axonserver-cli", "[Optional] Config file")
-	_ = viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
+	viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config"))
 	rootCmd.PersistentFlags().StringP("server", "S", "http://localhost:8024", "Server to send command to")
-	_ = viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
+	viper.BindPFlag("server", rootCmd.PersistentFlags().Lookup("server"))
 	rootCmd.PersistentFlags().StringP("token", "t", "", "[Optional] Access token to authenticate at server")
-	_ = viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
+	viper.BindPFlag("token", rootCmd.PersistentFlags().Lookup("token"))
 	rootCmd.PersistentFlags().Bool("pretty-json", false, "If enabled, all outputs will be pretty-json formatted")
-	_ = viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
+	viper.BindPFlag("pretty-json", rootCmd.PersistentFlags().Lookup("pretty-json"))
 	rootCmd.PersistentFlags().Bool("verbose", false, "If enabled, more output is produced")
-	_ = viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
+	viper.BindPFlag("verbose", rootCmd.PersistentFlags().Lookup("verbose"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -62,21 +62,20 @@ func initConfig() {
 		viper.SetConfigFile(viper.GetString("config"))
 	} else {
 		// Search config in current directory with name "axonserver-cli" (without extension).
-		var axoniqHome = "."
-		val, ok := os.LookupEnv("AXONIQ_HOME")
-		if ok {
-			axoniqHome = val
-		} else {
-			val, ok := os.LookupEnv("USERPROFILE")
-			if !ok {
-				val = os.Getenv("HOME")
-			}
-			axoniqHome = filepath.Join(val, ".axoniq")
-			if stat, err := os.Stat(axoniqHome); os.IsNotExist(err) || !stat.IsDir() {
-				axoniqHome = "."
-			}
+		var defaultDir = "."
+		viper.AddConfigPath(defaultDir)
+		// check AXONIQ_HOME for the config as well
+		if axoniqHome, ok := os.LookupEnv("AXONIQ_HOME"); ok {
+			viper.AddConfigPath(axoniqHome)
 		}
-		viper.AddConfigPath(axoniqHome)
+		// check USERPROFILE or HOME for .axoniq folder with config as well
+		if userprofile, ok := os.LookupEnv("USERPROFILE"); ok {
+			viper.AddConfigPath(filepath.Join(userprofile, ".axoniq"))
+		}
+		if home, ok := os.LookupEnv("HOME"); ok {
+			viper.AddConfigPath(filepath.Join(home, ".axoniq"))
+		}
+		// name of the file
 		viper.SetConfigName("axonserver-cli")
 	}
 
